@@ -6,8 +6,8 @@
  * Version: 1.0.0
  * Author: Fleetbase
  * Author URI: https://fleetbase.io
- * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * License: AGPL v3
+ * License URI: https://www.gnu.org/licenses/agpl-3.0.html
  * Text Domain: fleetbase-woocommerce
  * Domain Path: /languages
  * Requires at least: 5.8
