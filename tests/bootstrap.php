@@ -28,3 +28,5 @@ if ( ! defined( 'FLEETBASE_WC_BASENAME' ) ) {
 if ( ! defined( 'FLEETBASE_WC_MIN_WC_VERSION' ) ) {
 	define( 'FLEETBASE_WC_MIN_WC_VERSION', '9.5' );
 }
+
+require_once __DIR__ . '/Support/WooStubs.php';

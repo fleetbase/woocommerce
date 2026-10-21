@@ -104,6 +104,24 @@ session, which is part of the shipping package and therefore of the rate cache k
 `scheduled_at`. Order meta: `_fleetbase_delivery_choice`, `_fleetbase_scheduled_at` (ISO 8601 in the store
 timezone), `_fleetbase_delivery_label`.
 
+### Order sync
+
+Sync runs through Action Scheduler. To exercise it by hand:
+
+```bash
+wpc() { docker compose -f ../wordpress/docker-compose.yml run --rm -T wpcli "$@"; }
+wpc wc shop_order update 21 --status=on-hold --user=1 --porcelain     # note: `wc update` alone runs the WooCommerce DB updater
+wpc wc shop_order update 21 --status=processing --user=1 --porcelain  # queues fleetbase_wc_sync_order
+wpc action-scheduler run --hooks=fleetbase_wc_sync_order --force       # runs it now
+```
+
+Order meta: `_fleetbase_order_id`, `_fleetbase_tracking_number`, `_fleetbase_tracking_url`, `_fleetbase_status`,
+`_fleetbase_sync_state` (pending, syncing, synced, attention, failed, skipped), `_fleetbase_sync_log`,
+`_fleetbase_last_error`, `_fleetbase_sync_attempts`. Retries run 1, 5, 30, 120 and 480 minutes after a transient
+failure; validation and authentication errors fail immediately. "Send to Fleetbase" in order actions, the bulk
+menu and the Fleetbase delivery box force a re-sync (an existing Fleetbase order with the same internal id is
+adopted, never duplicated).
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.

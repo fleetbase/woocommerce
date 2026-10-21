@@ -54,6 +54,10 @@ final class Plugin {
 			Checkout\BlocksIntegration::class,
 			Checkout\ClassicCheckout::class,
 			Checkout\OrderDelivery::class,
+			Sync\OrderSyncer::class,
+			Orders\OrderActions::class,
+			Orders\MetaBox::class,
+			Orders\ListColumn::class,
 		];
 
 		/**

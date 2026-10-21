@@ -78,6 +78,11 @@ Date: 2026-10-21. Sources: local Fleetbase source (`oss/fleetbase-dev`, `fleetba
 - `GET /v1/places/search?geo=1` returns geocoder hits with `id: null`, GeoJSON `location.coordinates` as `[lng, lat]`, and upper-cased `address`. Creating a place from a hit with `street1` plus `latitude`/`longitude` stores it without a second geocode. Local search takes about 3.5 s.
 - `GET /v1/organizations/current` returns `id` (`company_…`), `name`, `currency`, `timezone`, `country`, `status`, `slug`.
 - API credentials' `test_mode` is not mass assignable; the model observer generates the key from it on create.
+- `POST /v1/orders` with `scheduled_at: 2026-10-21T11:00:00-07:00` comes back as `2026-10-21T11:00:00Z`: the offset is dropped (Laravel datetime cast). Send UTC (`…T18:00:00Z`) and it round-trips correctly.
+- `GET /v1/orders?internal_id=X` filters by internal id (verified), which makes order creation idempotent from the plugin side.
+- `POST /v1/payloads` with `pickup`, `dropoff`, `entities`, `type` and the COD fields, then `POST /v1/orders` with `payload: payload_…`, works for cash-on-delivery orders. The order response then carries `cod_amount`/`cod_currency`.
+- The created order's `customer.id` is a `contact_…` id, usable directly as `customer` on later orders.
+- Creating an order with `service_quote` makes Fleetbase create a `purchase_rate` with the quoted amount, visible on the order a few seconds later.
 - `GET /v1/service-quotes` accepts `dropoff[street1]`, `dropoff[city]`, `dropoff[province]`, `dropoff[postal_code]`, `dropoff[country]` as a nested query array and geocodes it. An address outside every rate's service area returns `[]` (verified with Spokane against a Seattle area). Each distinct address creates a Place and one ServiceQuote row per matching rate. Quote `items` can repeat the `BASE_FEE` code for the distance component (`details: "Service Fee"`).
 
 ---

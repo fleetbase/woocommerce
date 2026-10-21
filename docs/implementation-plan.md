@@ -219,6 +219,7 @@ The plugin can ship against the Fleetbase API as it exists today. The items belo
 | F4 | `GET /v1/service-quotes`: `preview=1` to skip persisting rows, fix the `currency` boolean bug, set `expired_at` (for example 30 minutes) on persisted quotes | `fleetops` | Keeps merchant accounts clean; quote reuse at order creation still works within the window | 1 day |
 | F5 | Honour `Idempotency-Key` on `POST /v1/orders` | `core-api`/`fleetops` | Belt and braces for sync | 0.5 day |
 | F6 | Expose `plan`, `billing_status`, `trial_ends_at` to API-key callers on `GET /v1/organizations/current`, or a `GET /v1/account/status` | `core-api`, `billing` | Trial and billing banners in the plugin | 0.5 day |
+| F8 | `scheduled_at` (and likely other datetime inputs) lose their UTC offset: Laravel's datetime cast stores the wall-clock part as UTC. Normalise incoming timestamps to UTC in the request layer | `fleetops` | Correct scheduling for every API client; the plugin already sends UTC | 0.5 day |
 | F7 | Correct the website's "native WooCommerce connector" claim to link to the real listing once published | `fleetbase.io` | Marketing accuracy | hours |
 
 The plugin is written so that F2 to F6 are detected at runtime: if the endpoint exists the wizard uses it, otherwise it falls back to manual instructions or polling. That lets the plugin ship before those PRs land.
@@ -249,7 +250,7 @@ Effort is in focused working days for one engineer with this codebase in front o
 - Delivery hours, lead time, horizon settings. Inner block for block checkout with ASAP/date/time window and quote refresh. Classic checkout fields. Validation and order storage.
 - Done when: a scheduled order carries the chosen time in both checkouts and quotes refresh when it changes.
 
-### Phase 4: Order sync out (3 days)
+### Phase 4: Order sync out (3 days) — DONE 2026-10-21
 - `OrderMapper`, `OrderSyncer`, Action Scheduler jobs with backoff, idempotency guards, COD payload path, customer contact cache, cancellation propagation, order meta box (read-only parts), order list column.
 - Done when: paying for an order in the sandbox produces a correct Fleetbase order within seconds, with entities, quote, scheduled time and customer; replaying the hook does not duplicate; a failed call retries and surfaces in the log.
 
