@@ -46,10 +46,38 @@ composer lint      # phpcs, WooCommerce-Core ruleset
 composer analyse   # phpstan level 6
 composer test      # phpunit (no WordPress runtime needed)
 pnpm lint:js
-docker compose -f ../wordpress/docker-compose.yml run --rm wpcli plugin check fleetbase-for-woocommerce \
-  --categories=plugin_repo,security --exclude-directories=vendor,node_modules,tests,docs,scripts,build \
-  --exclude-files=phpunit.xml.dist,phpstan.neon,phpcs.xml,webpack.config.js,composer.json,composer.lock,package.json,pnpm-lock.yaml
-scripts/build.sh   # produces build/fleetbase-for-woocommerce.zip
+scripts/build.sh   # produces build/fleetbase-for-woocommerce.zip and build/fleetbase-for-woocommerce/
+```
+
+### WordPress Plugin Check
+
+Run it against the staged build, never the working copy: with `node_modules` and `vendor` present the
+check walks tens of thousands of files and takes many minutes. Plugin Check must be active for the
+`wp plugin check` command to exist; deactivate it afterwards because it hooks into every request.
+
+```bash
+scripts/build.sh
+rm -rf ../wordpress/plugins/fbwc-dist && cp -R build/fleetbase-for-woocommerce ../wordpress/plugins/fbwc-dist
+cd ../wordpress
+docker compose run --rm wpcli plugin activate plugin-check
+docker compose run --rm wpcli plugin check fbwc-dist --categories=plugin_repo,security
+docker compose run --rm wpcli plugin deactivate plugin-check
+rm -f wordpress/wp-content/object-cache.php   # Plugin Check leaves this drop-in behind if interrupted
+```
+
+Because the staged folder is not named `fleetbase-for-woocommerce` (that name is the live dev mount), the
+check reports text-domain and slug mismatches against `fbwc-dist`. Ignore those; CI runs the same check
+under the real slug. Every other finding is real.
+
+### If the sandbox gets slow
+
+The local Fleetbase dev stack's `scheduler` container runs `artisan schedule:run` every minute, and
+under Rosetta some of its jobs take 5 to 30 minutes. They pile up until they use every core of the
+Docker VM, which makes every WordPress request take 30 seconds or more. Nothing in this plugin needs
+that scheduler. Stop it while developing:
+
+```bash
+docker stop fleetbase-dev-scheduler-1    # bring it back with: docker start fleetbase-dev-scheduler-1
 ```
 
 ## Gotchas learned on the way

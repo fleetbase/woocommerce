@@ -15,9 +15,10 @@ rsync -a "${ROOT}/" "${STAGE}/" \
   --exclude-from="${ROOT}/.distignore" \
   --exclude '.git' --exclude 'vendor' --exclude 'node_modules'
 
-( cd "${STAGE}" && cp "${ROOT}/composer.json" . && cp "${ROOT}/composer.lock" . \
+# composer.json ships (Plugin Check expects it next to vendor/); the lock file and dev packages do not.
+( cd "${STAGE}" && cp "${ROOT}/composer.lock" . \
   && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction --quiet \
-  && rm -f composer.json composer.lock )
+  && rm -f composer.lock )
 
 ( cd "${OUT}" && zip -qr "${SLUG}.zip" "${SLUG}" )
 echo "Built ${OUT}/${SLUG}.zip"
