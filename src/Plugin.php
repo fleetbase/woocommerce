@@ -51,6 +51,9 @@ final class Plugin {
 			Admin\Rest\SettingsController::class,
 			Shipping\ShippingMethods::class,
 			Shipping\NoService::class,
+			Checkout\BlocksIntegration::class,
+			Checkout\ClassicCheckout::class,
+			Checkout\OrderDelivery::class,
 		];
 
 		/**

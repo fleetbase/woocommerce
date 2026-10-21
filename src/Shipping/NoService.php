@@ -22,7 +22,11 @@ final class NoService implements Hookable {
 		add_filter( 'woocommerce_no_shipping_available_html', [ $this, 'no_shipping_html' ] );
 		add_filter( 'woocommerce_cart_no_shipping_available_html', [ $this, 'no_shipping_html' ] );
 		add_action( 'woocommerce_after_shipping_rate', [ $this, 'classic_rate_description' ], 10, 2 );
-		add_action( 'woocommerce_blocks_loaded', [ $this, 'extend_store_api' ] );
+		if ( did_action( 'woocommerce_blocks_loaded' ) ) {
+			$this->extend_store_api();
+		} else {
+			add_action( 'woocommerce_blocks_loaded', [ $this, 'extend_store_api' ] );
+		}
 	}
 
 	/**
