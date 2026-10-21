@@ -2,20 +2,21 @@ import apiFetch from '@wordpress/api-fetch';
 
 const runtime = window.fleetbaseWc || {};
 
-apiFetch.use( apiFetch.createRootURLMiddleware( runtime.restRoot ? runtime.restRoot.replace( /\/$/, '' ) + '/' : '/wp-json/fleetbase/v1/' ) );
-apiFetch.use( apiFetch.createNonceMiddleware( runtime.nonce || '' ) );
+// WordPress registers its own root URL and nonce middleware for wp-api-fetch, so paths only
+// need the plugin namespace. Registering a second root middleware would make both apply.
+const NAMESPACE = '/fleetbase/v1/';
 
 /**
  * Call a plugin REST route. Paths are relative to fleetbase/v1.
  */
 export function api( path, options = {} ) {
 	const { method = 'GET', data, query } = options;
-	let url = path.replace( /^\//, '' );
+	let fullPath = NAMESPACE + path.replace( /^\//, '' );
 	if ( query ) {
 		const params = new URLSearchParams( query );
-		url += ( url.includes( '?' ) ? '&' : '?' ) + params.toString();
+		fullPath += ( fullPath.includes( '?' ) ? '&' : '?' ) + params.toString();
 	}
-	return apiFetch( { path: url, method, data } );
+	return apiFetch( { path: fullPath, method, data } );
 }
 
 export function errorMessage( error ) {

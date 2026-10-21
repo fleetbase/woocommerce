@@ -39,8 +39,9 @@ final class Assets implements Hookable {
 		wp_set_script_translations( self::HANDLE, 'fleetbase-for-woocommerce', FLEETBASE_WC_PATH . 'languages' );
 
 		wp_enqueue_style( 'wp-components' );
-		if ( file_exists( FLEETBASE_WC_PATH . 'assets/build/admin.css' ) ) {
-			wp_enqueue_style( self::HANDLE, FLEETBASE_WC_URL . 'assets/build/admin.css', [ 'wp-components' ], (string) $asset['version'] );
+		if ( file_exists( FLEETBASE_WC_PATH . 'assets/build/style-admin.css' ) ) {
+			wp_enqueue_style( self::HANDLE, FLEETBASE_WC_URL . 'assets/build/style-admin.css', [ 'wp-components' ], (string) $asset['version'] );
+			wp_style_add_data( self::HANDLE, 'rtl', 'replace' );
 		}
 
 		wp_add_inline_script( self::HANDLE, 'window.fleetbaseWc = ' . (string) wp_json_encode( $this->runtime_data() ) . ';', 'before' );

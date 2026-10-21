@@ -120,7 +120,7 @@ final class Settings {
 	}
 
 	/**
-	 * @param mixed $default
+	 * @param mixed $fallback
 	 * @return mixed
 	 */
 	public function get( string $path, $fallback = null ) {

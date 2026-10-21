@@ -15,36 +15,46 @@ final class Menu implements Hookable {
 
 	public const CAPABILITY = 'manage_woocommerce';
 
-	/** @var array<string, array{title:string, menu:string, page:string}> */
-	private array $pages = [];
+	/** @var array<string, array{title:string, menu:string, page:string}>|null */
+	private ?array $pages = null;
 
 	public function register(): void {
-		$this->pages = [
-			'fleetbase'          => [
-				'title' => __( 'Fleetbase', 'fleetbase-for-woocommerce' ),
-				'menu'  => __( 'Dashboard', 'fleetbase-for-woocommerce' ),
-				'page'  => 'dashboard',
-			],
-			'fleetbase-setup'    => [
-				'title' => __( 'Fleetbase setup', 'fleetbase-for-woocommerce' ),
-				'menu'  => __( 'Setup', 'fleetbase-for-woocommerce' ),
-				'page'  => 'setup',
-			],
-			'fleetbase-settings' => [
-				'title' => __( 'Fleetbase settings', 'fleetbase-for-woocommerce' ),
-				'menu'  => __( 'Settings', 'fleetbase-for-woocommerce' ),
-				'page'  => 'settings',
-			],
-		];
-
-		/**
-		 * Filter the admin pages registered under the Fleetbase menu.
-		 *
-		 * @param array<string, array{title:string, menu:string, page:string}> $pages
-		 */
-		$this->pages = (array) apply_filters( 'fleetbase_wc_admin_pages', $this->pages );
-
 		add_action( 'admin_menu', [ $this, 'add_menu' ], 56 );
+	}
+
+	/**
+	 * Built lazily so translated labels are not loaded before init.
+	 *
+	 * @return array<string, array{title:string, menu:string, page:string}>
+	 */
+	public function pages(): array {
+		if ( null === $this->pages ) {
+			$pages = [
+				'fleetbase'          => [
+					'title' => __( 'Fleetbase', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Dashboard', 'fleetbase-for-woocommerce' ),
+					'page'  => 'dashboard',
+				],
+				'fleetbase-setup'    => [
+					'title' => __( 'Fleetbase setup', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Setup', 'fleetbase-for-woocommerce' ),
+					'page'  => 'setup',
+				],
+				'fleetbase-settings' => [
+					'title' => __( 'Fleetbase settings', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Settings', 'fleetbase-for-woocommerce' ),
+					'page'  => 'settings',
+				],
+			];
+
+			/**
+			 * Filter the admin pages registered under the Fleetbase menu.
+			 *
+			 * @param array<string, array{title:string, menu:string, page:string}> $pages
+			 */
+			$this->pages = (array) apply_filters( 'fleetbase_wc_admin_pages', $pages );
+		}
+		return $this->pages;
 	}
 
 	public function add_menu(): void {
@@ -57,14 +67,14 @@ final class Menu implements Hookable {
 			$this->icon(),
 			56
 		);
-		foreach ( $this->pages as $slug => $page ) {
+		foreach ( $this->pages() as $slug => $page ) {
 			add_submenu_page( 'fleetbase', $page['title'], $page['menu'], self::CAPABILITY, $slug, [ $this, 'render' ] );
 		}
 	}
 
 	public function render(): void {
 		$slug = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( (string) $_GET['page'] ) ) : 'fleetbase'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$page = $this->pages[ $slug ]['page'] ?? 'dashboard';
+		$page = $this->pages()[ $slug ]['page'] ?? 'dashboard';
 		printf(
 			'<div class="wrap fleetbase-wc-wrap"><div id="fleetbase-wc-admin" data-page="%s"><div class="fleetbase-wc-loading"><span class="spinner is-active"></span> %s</div></div></div>',
 			esc_attr( $page ),
@@ -72,15 +82,8 @@ final class Menu implements Hookable {
 		);
 	}
 
-	/**
-	 * @return array<string, array{title:string, menu:string, page:string}>
-	 */
-	public function pages(): array {
-		return $this->pages;
-	}
-
 	public function is_plugin_page( string $hook_suffix ): bool {
-		foreach ( array_keys( $this->pages ) as $slug ) {
+		foreach ( array_keys( $this->pages() ) as $slug ) {
 			if ( str_ends_with( $hook_suffix, '_page_' . $slug ) || 'toplevel_page_' . $slug === $hook_suffix ) {
 				return true;
 			}

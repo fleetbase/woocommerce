@@ -59,6 +59,13 @@ if [ -z "$(have service-rates service_name 'Express Delivery' || true)" ]; then
   req POST service-rates "{\"service_name\":\"Express Delivery\",\"service_type\":\"express\",\"rate_calculation_method\":\"fixed_rate\",\"currency\":\"USD\",\"base_fee\":0,\"per_meter_unit\":\"km\",\"meter_fees\":[{\"distance\":5,\"fee\":1200},{\"distance\":15,\"fee\":1800},{\"distance\":40,\"fee\":2900}],\"duration_terms\":\"Within 90 minutes\",\"estimated_days\":0${AREA_JSON}}" >/dev/null && echo "created Express Delivery (fixed tiers)"
 fi
 
+echo "==> Attach service area to rates"
+if [ -n "${AREA_ID}" ]; then
+  for RID in $(req GET "service-rates?limit=50" | python3 -I -c 'import sys,json; [print(r["id"]) for r in json.load(sys.stdin)]'); do
+    req PUT "service-rates/${RID}" "{\"service_area\":\"${AREA_ID}\",\"currency\":\"USD\"}" >/dev/null
+  done
+fi
+
 echo "==> Vehicles"
 V1="$(have vehicles plate_number 'WOO-001' || true)"; [ -z "$V1" ] && V1="$(req POST vehicles '{"plate_number":"WOO-001","make":"Ford","model":"Transit Connect","year":"2023","status":"active","type":"van"}' | python3 -I -c 'import sys,json; print(json.load(sys.stdin)["id"])')"
 V2="$(have vehicles plate_number 'WOO-002' || true)"; [ -z "$V2" ] && V2="$(req POST vehicles '{"plate_number":"WOO-002","make":"Toyota","model":"Prius","year":"2022","status":"active","type":"car"}' | python3 -I -c 'import sys,json; print(json.load(sys.stdin)["id"])')"

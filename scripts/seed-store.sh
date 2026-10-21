@@ -53,6 +53,15 @@ wp config set WP_DEBUG true --raw --type=constant >/dev/null
 wp config set WP_DEBUG_LOG true --raw --type=constant >/dev/null
 wp config set WP_DEBUG_DISPLAY false --raw --type=constant >/dev/null
 
+echo "==> Dev admin user (sandbox only)"
+DEV_USER="${FBWC_DEV_USER:-fbwc-admin}"
+DEV_PASS="${FBWC_DEV_PASS:-fbwc-sandbox-2026}"
+if wp user get "${DEV_USER}" --field=ID >/dev/null 2>&1; then
+  wp user update "${DEV_USER}" --user_pass="${DEV_PASS}" --role=administrator >/dev/null && echo "updated ${DEV_USER}"
+else
+  wp user create "${DEV_USER}" "${DEV_USER}@example.test" --role=administrator --user_pass="${DEV_PASS}" >/dev/null && echo "created ${DEV_USER}"
+fi
+
 echo "==> Activate plugin"
 wp plugin activate fleetbase-for-woocommerce >/dev/null && echo "activated"
 echo "Done. Open http://localhost:8800/wp-admin/admin.php?page=fleetbase-setup"
