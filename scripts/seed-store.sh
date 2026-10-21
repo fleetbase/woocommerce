@@ -37,13 +37,17 @@ create_product "Potted Olive Tree" 65.00 9.0 40 40 90 WOO-OLIVE
 
 echo "==> Shipping zone: Washington state"
 wp eval '
-$zones = WC_Shipping_Zones::get_zones();
-foreach ( $zones as $z ) { if ( "Washington" === $z["zone_name"] ) { echo "zone exists\n"; return; } }
-$zone = new WC_Shipping_Zone();
-$zone->set_zone_name( "Washington" );
+$zone = null;
+foreach ( WC_Shipping_Zones::get_zones() as $z ) { if ( "Washington" === $z["zone_name"] ) { $zone = WC_Shipping_Zones::get_zone( $z["zone_id"] ); } else { $other = WC_Shipping_Zones::get_zone( $z["zone_id"] ); $other->set_zone_order( 10 ); $other->save(); } }
+if ( ! $zone ) { $zone = new WC_Shipping_Zone(); $zone->set_zone_name( "Washington" ); }
+$zone->set_zone_order( 0 );
 $zone->set_locations( [ [ "code" => "US:WA", "type" => "state" ] ] );
 $zone->save();
-echo "created zone " . $zone->get_id() . " (add the Fleetbase Delivery method from the wizard or WooCommerce > Settings > Shipping)\n";
+$has = false;
+foreach ( $zone->get_shipping_methods() as $m ) { if ( "fleetbase" === $m->id ) { $has = true; } }
+if ( ! $has && isset( WC()->shipping()->get_shipping_methods()["fleetbase"] ) ) { $zone->add_shipping_method( "fleetbase" ); echo "added Fleetbase Delivery to the zone\n"; }
+WC_Cache_Helper::get_transient_version( "shipping", true );
+echo "zone " . $zone->get_id() . " ready: Washington state, sorted first\n";
 '
 
 echo "==> Dev constants in wp-config.php"

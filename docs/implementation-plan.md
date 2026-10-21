@@ -229,19 +229,19 @@ The plugin is written so that F2 to F6 are detected at runtime: if the endpoint 
 
 Effort is in focused working days for one engineer with this codebase in front of them. Phases are ordered so each one leaves the sandbox in a demonstrable state. Total: about 24 working days for the plugin, plus 5 to 7 days of Fleetbase-side work that can run in parallel.
 
-### Phase 0: Foundations (2 days)
+### Phase 0: Foundations (2 days) — DONE 2026-10-21
 - Repo scaffold, bootstrap file with headers and requirements guard, Composer and npm toolchains, phpcs, PHPStan, wp-env config, GitHub Actions (lint, static analysis, unit tests, plugin-check, build zip).
 - Docker: add `../fleetbase-woocommerce:/var/www/html/wp-content/plugins/fleetbase-for-woocommerce` to the sandbox compose file; add a `wpcli` service; seed script that sets the store address, creates products with weights and dimensions, and enables Fulfillments.
 - Fleetbase local seed: organisation, live and test API keys, a pickup place, two service rates (fixed and per-km), a service area, two drivers, two vehicles. Script it against `localhost:8000` so it is repeatable.
 - API client with retries, rate-limit handling, error normalisation, and request logging. Unit tests with recorded responses.
 - Done when: plugin activates clean on the sandbox, `wp plugin check` passes, CI is green, the client can create and read an order against local Fleetbase from a unit test.
 
-### Phase 1: Connection, settings, wizard (3 days)
+### Phase 1: Connection, settings, wizard (3 days) — DONE 2026-10-21
 - Settings schema and screens, connection provider interface with the Cloud provider, encrypted key storage, connection test, organisation display, pickup place creation and picker (geocode search), site token generation.
 - Setup wizard (React) covering section 4.1 A.
 - Done when: a fresh install can be connected to local Fleetbase (via the self-hosted provider stub in dev mode) and to Cloud, and shows a green status card.
 
-### Phase 2: Shipping method and quotes (3 days)
+### Phase 2: Shipping method and quotes (3 days) — DONE 2026-10-21
 - `FleetbaseShippingMethod`, `QuoteService` with caching and filtering, rate meta, description and delivery time, fallback behaviour, no-service messaging in both checkouts.
 - Done when: the sandbox checkout shows live rates from the local Fleetbase service rates, changes with address, hides outside the service area, and survives Fleetbase being stopped.
 

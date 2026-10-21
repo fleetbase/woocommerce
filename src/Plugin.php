@@ -49,6 +49,8 @@ final class Plugin {
 			Admin\Rest\ConnectionController::class,
 			Admin\Rest\PlacesController::class,
 			Admin\Rest\SettingsController::class,
+			Shipping\ShippingMethods::class,
+			Shipping\NoService::class,
 		];
 
 		/**

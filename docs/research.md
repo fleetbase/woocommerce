@@ -78,6 +78,7 @@ Date: 2026-10-21. Sources: local Fleetbase source (`oss/fleetbase-dev`, `fleetba
 - `GET /v1/places/search?geo=1` returns geocoder hits with `id: null`, GeoJSON `location.coordinates` as `[lng, lat]`, and upper-cased `address`. Creating a place from a hit with `street1` plus `latitude`/`longitude` stores it without a second geocode. Local search takes about 3.5 s.
 - `GET /v1/organizations/current` returns `id` (`company_…`), `name`, `currency`, `timezone`, `country`, `status`, `slug`.
 - API credentials' `test_mode` is not mass assignable; the model observer generates the key from it on create.
+- `GET /v1/service-quotes` accepts `dropoff[street1]`, `dropoff[city]`, `dropoff[province]`, `dropoff[postal_code]`, `dropoff[country]` as a nested query array and geocodes it. An address outside every rate's service area returns `[]` (verified with Spokane against a Seattle area). Each distinct address creates a Place and one ServiceQuote row per matching rate. Quote `items` can repeat the `BASE_FEE` code for the distance component (`details: "Service Fee"`).
 
 ---
 

@@ -1,0 +1,4 @@
+[
+  {"id":"service_h48uxtr3nu","service_name":"Standard Delivery","service_type":"standard","currency":"USD","duration_terms":"Same day, 2-4 hours","estimated_days":0},
+  {"id":"service_xkuh4vwkoa","service_name":"Express Delivery","service_type":"express","currency":"USD","duration_terms":"Within 90 minutes","estimated_days":0}
+]

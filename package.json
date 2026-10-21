@@ -13,7 +13,11 @@
     "packages-update": "wp-scripts packages-update"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^30.0.0"
+    "@wordpress/scripts": "^30.0.0",
+    "typescript": "^5.6.3",
+    "prettier": "npm:wp-prettier@^3.0.3",
+    "@wordpress/prettier-config": "^4.0.0",
+    "@wordpress/eslint-plugin": "^22.0.0"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^7.0.0",
@@ -23,5 +27,13 @@
     "@wordpress/i18n": "^5.0.0",
     "@wordpress/icons": "^10.0.0",
     "@wordpress/url": "^4.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "^5.6.3"
+    }
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

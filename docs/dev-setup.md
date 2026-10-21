@@ -80,6 +80,21 @@ that scheduler. Stop it while developing:
 docker stop fleetbase-dev-scheduler-1    # bring it back with: docker start fleetbase-dev-scheduler-1
 ```
 
+## Checkout testing
+
+`scripts/seed-store.sh` puts a "Washington" zone (US:WA) at the top of the zone order with Fleetbase Delivery
+attached. WooCommerce uses the first matching zone, so any broader "United States" zone must sort below it or the
+Fleetbase method never runs. A Seattle address (for example 1124 Pike St, 98101) is inside the seeded service area;
+Spokane (99201) is outside it and should show no delivery options. The page `/classic-checkout/` holds the
+shortcode checkout for testing the non-block path.
+
+To simulate a Fleetbase outage without stopping containers, point the stored connection host at a dead port and
+bump the quote cache version, then restore it:
+
+```bash
+docker compose run --rm wpcli eval '$c=get_option("fleetbase_wc_connection"); $c["host"]="http://host.docker.internal:8999"; update_option("fleetbase_wc_connection",$c,false); \Fleetbase\WooCommerce\Shipping\QuoteCacheVersion::bump();'
+```
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.
@@ -88,3 +103,7 @@ docker stop fleetbase-dev-scheduler-1    # bring it back with: docker start flee
 - Fleetbase `PUT /v1/service-rates/{id}` requires `currency` even for partial updates.
 - Fleetbase `POST /v1/service-areas` takes `latitude`, `longitude` and `radius` (metres) and builds the border itself; a raw polygon fails.
 - `ApiCredential.test_mode` is not mass assignable; the seed sets it with a direct update.
+- Quote calls from the WordPress container normally take 0.4 to 2 s locally, but the first geocode of a new address
+  can spike past 10 s when the host is loaded. The checkout timeout is a setting (`checkout.quote_timeout`, default 10 s).
+- The Checkout block renders a rate's `description` and `delivery_time`; the shortcode checkout needs
+  `woocommerce_after_shipping_rate`, which the plugin hooks.

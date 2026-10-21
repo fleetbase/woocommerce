@@ -1,0 +1,10 @@
+[
+  {"id":"quote_73s6jrcv9q","service_rate_name":"Standard Delivery","service_name":"Standard Delivery","service_rate":"service_h48uxtr3nu","facilitator":null,
+   "items":[{"id":null,"amount":500,"currency":"USD","details":"Base Fee","code":"BASE_FEE"},{"id":null,"amount":258,"currency":"USD","details":"Service Fee","code":"BASE_FEE"}],
+   "request_id":"request_kfng2unzpk","amount":758,"currency":"USD","meta":{}},
+  {"id":"quote_meqmgrsrlw","service_rate_name":"Express Delivery","service_name":"Express Delivery","service_rate":"service_xkuh4vwkoa","facilitator":null,
+   "items":[{"id":null,"amount":0,"currency":"USD","details":"Base Fee","code":"BASE_FEE"},{"id":null,"amount":1200,"currency":"USD","details":"Service Fee","code":"BASE_FEE"}],
+   "request_id":"request_kfng2unzpk","amount":1200,"currency":"USD","meta":{}},
+  {"id":"quote_sgdonly","service_rate_name":"SG Courier","service_name":"SG Courier","service_rate":"service_sg","facilitator":null,"items":[],
+   "request_id":"request_kfng2unzpk","amount":900,"currency":"SGD","meta":{}}
+]

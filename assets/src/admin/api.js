@@ -8,13 +8,18 @@ const NAMESPACE = '/fleetbase/v1/';
 
 /**
  * Call a plugin REST route. Paths are relative to fleetbase/v1.
+ *
+ * @param {string} path    Route path relative to the plugin namespace.
+ * @param {Object} options Request options: method, data, query.
+ * @return {Promise<any>} Parsed JSON response.
  */
 export function api( path, options = {} ) {
 	const { method = 'GET', data, query } = options;
 	let fullPath = NAMESPACE + path.replace( /^\//, '' );
 	if ( query ) {
 		const params = new URLSearchParams( query );
-		fullPath += ( fullPath.includes( '?' ) ? '&' : '?' ) + params.toString();
+		fullPath +=
+			( fullPath.includes( '?' ) ? '&' : '?' ) + params.toString();
 	}
 	return apiFetch( { path: fullPath, method, data } );
 }
