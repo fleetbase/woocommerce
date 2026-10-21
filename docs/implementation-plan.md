@@ -245,7 +245,7 @@ Effort is in focused working days for one engineer with this codebase in front o
 - `FleetbaseShippingMethod`, `QuoteService` with caching and filtering, rate meta, description and delivery time, fallback behaviour, no-service messaging in both checkouts.
 - Done when: the sandbox checkout shows live rates from the local Fleetbase service rates, changes with address, hides outside the service area, and survives Fleetbase being stopped.
 
-### Phase 3: Delivery scheduling (2 days)
+### Phase 3: Delivery scheduling (2 days) — DONE 2026-10-21
 - Delivery hours, lead time, horizon settings. Inner block for block checkout with ASAP/date/time window and quote refresh. Classic checkout fields. Validation and order storage.
 - Done when: a scheduled order carries the chosen time in both checkouts and quotes refresh when it changes.
 

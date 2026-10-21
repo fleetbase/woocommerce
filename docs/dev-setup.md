@@ -95,6 +95,15 @@ bump the quote cache version, then restore it:
 docker compose run --rm wpcli eval '$c=get_option("fleetbase_wc_connection"); $c["host"]="http://host.docker.internal:8999"; update_option("fleetbase_wc_connection",$c,false); \Fleetbase\WooCommerce\Shipping\QuoteCacheVersion::bump();'
 ```
 
+### Scheduling
+
+The delivery-time control is a WooCommerce inner block registered with `lock.remove = true`, which makes the
+Checkout block force-render it inside the shipping methods block without the merchant editing the page. The
+classic checkout gets a `<select>` in the order review table instead. Both write the choice to the WooCommerce
+session, which is part of the shipping package and therefore of the rate cache key, so quotes refresh with
+`scheduled_at`. Order meta: `_fleetbase_delivery_choice`, `_fleetbase_scheduled_at` (ISO 8601 in the store
+timezone), `_fleetbase_delivery_label`.
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.
@@ -107,3 +116,7 @@ docker compose run --rm wpcli eval '$c=get_option("fleetbase_wc_connection"); $c
   can spike past 10 s when the host is loaded. The checkout timeout is a setting (`checkout.quote_timeout`, default 10 s).
 - The Checkout block renders a rate's `description` and `delivery_time`; the shortcode checkout needs
   `woocommerce_after_shipping_rate`, which the plugin hooks.
+- `woocommerce_blocks_loaded` fires before `plugins_loaded` priority 20. Anything that must run on it (Store API
+  update callbacks, extension data) has to check `did_action()` and run immediately when the hook already fired.
+- WooCommerce's block packages (`wc.blocksCheckout`, `wc.wcSettings`) are consumed as globals with script
+  dependencies `wc-blocks-checkout` and `wc-settings`; the WooCommerce dependency-extraction plugin is not used.
