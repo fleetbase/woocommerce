@@ -87,7 +87,7 @@ final class Connection {
 
 	public static function is_valid_host( string $host ): bool {
 		$host  = self::normalize_host( $host );
-		$parts = wp_parse_url_compat( $host );
+		$parts = self::parse_url( $host );
 		if ( ! is_array( $parts ) || empty( $parts['host'] ) ) {
 			return false;
 		}
@@ -101,15 +101,13 @@ final class Connection {
 		$is_ipv6  = str_starts_with( $hostname, '[' ) && false !== filter_var( trim( $hostname, '[]' ), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 );
 		return $is_ipv6 || 1 === preg_match( '/^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*$/', $hostname );
 	}
-}
 
-if ( ! function_exists( __NAMESPACE__ . '\\wp_parse_url_compat' ) ) {
 	/**
 	 * parse_url that works with or without WordPress loaded.
 	 *
 	 * @return array<string, mixed>|false
 	 */
-	function wp_parse_url_compat( string $url ) {
+	private static function parse_url( string $url ) {
 		return function_exists( 'wp_parse_url' ) ? wp_parse_url( $url ) : parse_url( $url ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
 	}
 }

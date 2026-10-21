@@ -192,7 +192,7 @@ final class Settings {
 				return max( $min, min( $max, (int) $value ) );
 			case 'decimal':
 				$value = is_scalar( $value ) ? trim( (string) $value ) : '';
-				return '' === $value ? '' : (string) wc_format_decimal_compat( $value );
+				return '' === $value ? '' : self::format_decimal( $value );
 			case 'enum':
 				$allowed = explode( ',', $parts[1] ?? '' );
 				$value   = is_scalar( $value ) ? (string) $value : '';
@@ -274,13 +274,11 @@ final class Settings {
 		}
 		$ref = $value;
 	}
-}
 
-if ( ! function_exists( __NAMESPACE__ . '\\wc_format_decimal_compat' ) ) {
-	/**
-	 * @return string|float
-	 */
-	function wc_format_decimal_compat( string $value ) {
-		return function_exists( 'wc_format_decimal' ) ? wc_format_decimal( $value ) : (float) str_replace( ',', '.', $value );
+	private static function format_decimal( string $value ): string {
+		if ( function_exists( 'wc_format_decimal' ) ) {
+			return (string) wc_format_decimal( $value );
+		}
+		return (string) (float) str_replace( ',', '.', $value );
 	}
 }

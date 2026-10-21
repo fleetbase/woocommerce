@@ -71,3 +71,13 @@ jobs:
             tests
             docs
             scripts
+            build
+          exclude-files: |
+            phpunit.xml.dist
+            phpstan.neon
+            phpcs.xml
+            webpack.config.js
+            composer.json
+            composer.lock
+            package.json
+            pnpm-lock.yaml

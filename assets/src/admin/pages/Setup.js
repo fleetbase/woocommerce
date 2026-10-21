@@ -86,7 +86,7 @@ export default function Setup() {
 
 	return (
 		<div className="fbwc-page fbwc-page--narrow">
-			<Header title={ __( 'Set up Fleetbase', 'fleetbase-for-woocommerce' ) } />
+			<Header title={ __( 'Set up Fleetbase', 'fleetbase-for-woocommerce' ) } connection={ state.connection } />
 			<Stepper current={ step } />
 			{ error && <Notice status="error" isDismissible onRemove={ () => setError( null ) }>{ error }</Notice> }
 

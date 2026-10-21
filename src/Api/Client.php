@@ -80,7 +80,7 @@ final class Client {
 		$payload = null;
 		if ( null !== $body ) {
 			$headers['Content-Type'] = 'application/json';
-			$payload                 = (string) wp_json_encode_compat( $body );
+			$payload                 = self::encode( $body );
 		}
 		if ( ! empty( $options['idempotency_key'] ) ) {
 			$headers['Idempotency-Key'] = (string) $options['idempotency_key'];
@@ -301,16 +301,12 @@ final class Client {
 			$this->logger->log( $level, $message, $context );
 		}
 	}
-}
 
-if ( ! function_exists( __NAMESPACE__ . '\\wp_json_encode_compat' ) ) {
 	/**
-	 * json_encode that uses WordPress's helper when available.
-	 *
-	 * @param mixed $data
-	 * @return string|false
+	 * @param array<string, mixed> $data
 	 */
-	function wp_json_encode_compat( $data ) {
-		return function_exists( 'wp_json_encode' ) ? wp_json_encode( $data ) : json_encode( $data ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
+	private static function encode( array $data ): string {
+		$json = function_exists( 'wp_json_encode' ) ? wp_json_encode( $data ) : json_encode( $data ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
+		return false === $json ? '{}' : (string) $json;
 	}
 }

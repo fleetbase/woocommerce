@@ -27,7 +27,7 @@ export default function Settings() {
 
 	return (
 		<div className="fbwc-page">
-			<Header title={ __( 'Fleetbase settings', 'fleetbase-for-woocommerce' ) } />
+			<Header title={ __( 'Fleetbase settings', 'fleetbase-for-woocommerce' ) } connection={ state.connection } />
 			{ notice && <Notice status={ notice.status } isDismissible onRemove={ () => setNotice( null ) }>{ notice.text }</Notice> }
 			<div className="fbwc-grid">
 				<div className="fbwc-grid__main">

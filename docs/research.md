@@ -72,6 +72,13 @@ Date: 2026-10-21. Sources: local Fleetbase source (`oss/fleetbase-dev`, `fleetba
 - Public tracking page URL comes back on the order as `tracking_number.url` (console `~/track/{n}`).
 - `GET /public/track/{number}` works without a key.
 
+### 2.7 Learned while building Phase 0–1
+- `PUT /v1/service-rates/{id}` validates `currency` as required even on partial updates. Always send it.
+- `POST /v1/service-areas` requires `country` and builds its border from `latitude`, `longitude` and `radius` (metres). Sending a GeoJSON polygon as `border` returns "Failed to create service area."
+- `GET /v1/places/search?geo=1` returns geocoder hits with `id: null`, GeoJSON `location.coordinates` as `[lng, lat]`, and upper-cased `address`. Creating a place from a hit with `street1` plus `latitude`/`longitude` stores it without a second geocode. Local search takes about 3.5 s.
+- `GET /v1/organizations/current` returns `id` (`company_…`), `name`, `currency`, `timezone`, `country`, `status`, `slug`.
+- API credentials' `test_mode` is not mass assignable; the model observer generates the key from it on create.
+
 ---
 
 ## 3. Fleetbase commercial facts

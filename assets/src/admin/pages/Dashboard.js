@@ -12,7 +12,7 @@ export default function Dashboard() {
 
 	return (
 		<div className="fbwc-page">
-			<Header title={ __( 'Fleetbase', 'fleetbase-for-woocommerce' ) } />
+			<Header title={ __( 'Fleetbase', 'fleetbase-for-woocommerce' ) } connection={ state.connection } />
 			<div className="fbwc-grid">
 				<div className="fbwc-grid__main">
 					<StatusCard state={ state } onChange={ setState } />

@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { runtimeData } from '../api';
 
-export default function Header( { title, children } ) {
-	const { pages, connection } = runtimeData;
+export default function Header( { title, connection: liveConnection, children } ) {
+	const { pages } = runtimeData;
+	const connection = liveConnection || runtimeData.connection;
 	return (
 		<div className="fbwc-header">
 			<div className="fbwc-header__brand">
