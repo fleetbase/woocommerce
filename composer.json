@@ -1,0 +1,57 @@
+{
+  "name": "fleetbase/woocommerce",
+  "description": "Fleetbase for WooCommerce: last-mile delivery management, live delivery quotes at checkout, driver and vehicle management, and order sync with Fleetbase.",
+  "type": "wordpress-plugin",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://fleetbase.io",
+  "authors": [
+    {
+      "name": "Fleetbase Pte Ltd",
+      "email": "hello@fleetbase.io",
+      "homepage": "https://fleetbase.io"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/fleetbase/woocommerce/issues",
+    "source": "https://github.com/fleetbase/woocommerce"
+  },
+  "require": {
+    "php": ">=8.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5",
+    "woocommerce/woocommerce-sniffs": "^1.0",
+    "phpstan/phpstan": "^2.1",
+    "szepeviktor/phpstan-wordpress": "^2.0",
+    "php-stubs/woocommerce-stubs": "^9.9",
+    "brain/monkey": "^2.6",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fleetbase\\WooCommerce\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Fleetbase\\WooCommerce\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "8.1"
+    },
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "lint": "phpcs",
+    "lint:fix": "phpcbf",
+    "analyse": "phpstan analyse --memory-limit=1G",
+    "test": "phpunit",
+    "build": "bash scripts/build.sh"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "order_7YqM3KpL2n",
+  "internal_id": "ORD-1001",
+  "order_config": "order_config_transport",
+  "customer": { "id": "contact_9kLm2Pq", "name": "Jane Doe", "email": "jane@example.com" },
+  "payload": {
+    "id": "payload_3Xy9",
+    "pickup": { "id": "place_1A2b", "address": "100 Pike St, Seattle, WA 98101", "location": { "latitude": 47.6089, "longitude": -122.3403 } },
+    "dropoff": { "id": "place_7Gh8", "address": "400 Broad St, Seattle, WA 98109", "location": { "latitude": 47.6205, "longitude": -122.3493 } },
+    "waypoints": [],
+    "entities": [],
+    "cod_amount": null
+  },
+  "driver_assigned": null,
+  "tracking_number": {
+    "id": "track_5Qw1",
+    "tracking_number": "FB-1001",
+    "status": "created",
+    "qr_code": "https://api.fleetbase.io/qr/FB-1001",
+    "url": "https://console.fleetbase.io/track-order/FB-1001"
+  },
+  "tracking_statuses": [],
+  "type": "transport",
+  "status": "created",
+  "pod_required": false,
+  "dispatched": false,
+  "adhoc": false,
+  "distance": 0,
+  "time": 0,
+  "meta": { "woocommerce_order_id": 42 },
+  "scheduled_at": null,
+  "created_at": "2026-10-21T08:30:00.000000Z"
+}

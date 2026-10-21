@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ruleset name="Fleetbase for WooCommerce">
+	<description>Coding standards for Fleetbase for WooCommerce.</description>
+
+	<file>fleetbase-for-woocommerce.php</file>
+	<file>uninstall.php</file>
+	<file>src</file>
+
+	<arg value="sp"/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/>
+
+	<config name="minimum_supported_wp_version" value="6.8"/>
+	<config name="testVersion" value="8.1-"/>
+
+	<!--
+		WooCommerce-Core with the docblock-everything sniffs relaxed: this codebase uses
+		typed signatures and PHPStan (level 6) for parameter and return documentation.
+		Security, i18n, escaping, prefixing and WordPress API sniffs stay fully enabled.
+	-->
+	<rule ref="WooCommerce-Core">
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<exclude name="Generic.Commenting.DocComment.ShortNotCapital"/>
+		<exclude name="Squiz.Commenting.FileComment.Missing"/>
+		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
+		<exclude name="Squiz.Commenting.FunctionComment"/>
+		<exclude name="Squiz.Commenting.FunctionCommentThrowTag"/>
+		<exclude name="Squiz.Commenting.VariableComment"/>
+		<exclude name="WooCommerce.Commenting.CommentHooks.MissingSinceComment"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+		<exclude name="Universal.Operators.DisallowShortTernary"/>
+		<exclude name="Universal.Files.SeparateFunctionsFromOO"/>
+	</rule>
+
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="manage_woocommerce"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="fleetbase-for-woocommerce"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="fleetbase_wc"/>
+				<element value="FLEETBASE_WC"/>
+				<element value="Fleetbase\WooCommerce"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Files.FileName">
+		<properties>
+			<property name="strict_class_file_names" value="false"/>
+		</properties>
+		<exclude-pattern>src/*</exclude-pattern>
+	</rule>
+</ruleset>

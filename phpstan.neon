@@ -1,0 +1,15 @@
+includes:
+  - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+  level: 6
+  paths:
+    - fleetbase-for-woocommerce.php
+    - uninstall.php
+    - src
+  scanFiles:
+    - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    - vendor/php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
+  bootstrapFiles:
+    - tests/phpstan-bootstrap.php
+  treatPhpDocTypesAsCertain: false
