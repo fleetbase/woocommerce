@@ -176,6 +176,23 @@ wpc action-scheduler run --hooks=fleetbase_wc_sync_order,fleetbase_wc_reconcile_
 The end-to-end tests do not rely on the queue: they trigger the sync through the Deliveries page's resync action.
 On a real host with working cron this is not an issue.
 
+### Test matrix
+
+Run before a release. Each item was last run on 2026-10-22.
+
+| Item | How | Result |
+|---|---|---|
+| Block and classic checkout | `pnpm test:e2e` | both covered by the suite |
+| HPOS on | default sandbox state, `pnpm test:e2e` | pass |
+| HPOS off | `wpc wc hpos sync && wpc wc hpos disable`, run `delivery-flow.spec.js`, then `wpc wc hpos sync && wpc wc hpos enable` | pass; meta lands in post meta, legacy meta box renders |
+| PHP 8.1 | `vendor/bin/phpstan analyse -c phpstan-php81.neon` and phpcs `testVersion 8.1-` | clean |
+| Fulfillments on | `wpc option update woocommerce_feature_fulfillments_enabled yes`, complete a delivery, poll | fulfillment created with tracking |
+| Accessibility | `accessibility.spec.js` (axe, WCAG 2.1 AA serious/critical) | clean |
+| Plugin Check | staged build, see above | clean apart from staging-slug artifacts |
+
+Never change `woocommerce_custom_orders_table_enabled` directly: WooCommerce throws when orders are unsynced.
+Use the `wc hpos` commands.
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.
