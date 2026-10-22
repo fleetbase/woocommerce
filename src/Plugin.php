@@ -43,12 +43,17 @@ final class Plugin {
 	private function hookables(): array {
 		$hookables = [
 			Support\Compat::class,
+			Support\Capabilities::class,
 			Admin\Notices::class,
 			Admin\Menu::class,
 			Admin\Assets::class,
 			Admin\Rest\ConnectionController::class,
 			Admin\Rest\PlacesController::class,
 			Admin\Rest\SettingsController::class,
+			Admin\Rest\DriversController::class,
+			Admin\Rest\VehiclesController::class,
+			Admin\Rest\ServiceRatesController::class,
+			Admin\Rest\DeliveriesController::class,
 			Shipping\ShippingMethods::class,
 			Shipping\NoService::class,
 			Checkout\BlocksIntegration::class,
@@ -212,6 +217,7 @@ final class Plugin {
 			add_option( 'fleetbase_wc_settings', Settings::defaults(), '', true );
 		}
 		update_option( 'fleetbase_wc_version', FLEETBASE_WC_VERSION, true );
+		Support\Capabilities::ensure();
 		set_transient( 'fleetbase_wc_activation_redirect', 1, 60 );
 	}
 

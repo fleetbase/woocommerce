@@ -30,19 +30,39 @@ abstract class RestController implements Hookable {
 	}
 
 	/**
+	 * Dispatchers may run deliveries without full store management rights.
+	 */
+	public function permission_dispatch(): bool {
+		return \Fleetbase\WooCommerce\Support\Capabilities::can_dispatch();
+	}
+
+	/**
 	 * @param array<string, mixed> $args
 	 */
-	protected function route( string $path, string $methods, callable $callback, array $args = [] ): void {
+	protected function route( string $path, string $methods, callable $callback, array $args = [], bool $dispatch = false ): void {
 		register_rest_route(
 			self::NAMESPACE,
 			$path,
 			[
 				'methods'             => $methods,
 				'callback'            => $callback,
-				'permission_callback' => [ $this, 'permission' ],
+				'permission_callback' => [ $this, $dispatch ? 'permission_dispatch' : 'permission' ],
 				'args'                => $args,
 			]
 		);
+	}
+
+	/**
+	 * Body or query params as a plain array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function input( \WP_REST_Request $request ): array {
+		$json = $request->get_json_params();
+		if ( is_array( $json ) && [] !== $json ) {
+			return $json;
+		}
+		return (array) $request->get_params();
 	}
 
 	/**

@@ -87,3 +87,31 @@
 }
 
 .fleetbase-wc-loading { padding: 40px; color: #646970; .spinner { float: none; margin: 0 8px 0 0; } }
+
+.fbwc-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: flex-end;
+	margin: 0 0 16px;
+
+	.components-base-control { min-width: 160px; }
+}
+
+.fbwc-data-table {
+	th, td { vertical-align: middle; }
+	&__state { text-align: center; padding: 24px; color: #646970; }
+}
+
+.fbwc-row-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.fbwc-inline { display: flex; gap: 6px; align-items: center; .components-base-control { min-width: 150px; } }
+.fbwc-error { color: #b32d2e; font-size: 12px; }
+.fbwc-tiers { margin: 12px 0; }
+.fbwc-modal--wide .components-modal__frame { max-width: 760px; width: 100%; }
+
+.fbwc-state {
+	display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; background: #f0f0f1; color: #50575e;
+	&--synced { background: #e6f4ea; color: #1e7e34; }
+	&--pending, &--syncing { background: #fcf0e4; color: #996800; }
+	&--failed, &--attention { background: #fbeaea; color: #b32d2e; }
+}

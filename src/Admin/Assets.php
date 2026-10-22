@@ -59,11 +59,15 @@ final class Assets implements Hookable {
 			'adminUrl'                 => admin_url(),
 			'siteUrl'                  => home_url( '/' ),
 			'pages'                    => [
-				'dashboard' => admin_url( 'admin.php?page=fleetbase' ),
-				'setup'     => admin_url( 'admin.php?page=fleetbase-setup' ),
-				'settings'  => admin_url( 'admin.php?page=fleetbase-settings' ),
-				'shipping'  => admin_url( 'admin.php?page=wc-settings&tab=shipping' ),
-				'logs'      => admin_url( 'admin.php?page=wc-status&tab=logs&source=fleetbase' ),
+				'dashboard'  => admin_url( 'admin.php?page=fleetbase' ),
+				'deliveries' => admin_url( 'admin.php?page=fleetbase-deliveries' ),
+				'drivers'    => admin_url( 'admin.php?page=fleetbase-drivers' ),
+				'vehicles'   => admin_url( 'admin.php?page=fleetbase-vehicles' ),
+				'rates'      => admin_url( 'admin.php?page=fleetbase-service-rates' ),
+				'setup'      => admin_url( 'admin.php?page=fleetbase-setup' ),
+				'settings'   => admin_url( 'admin.php?page=fleetbase-settings' ),
+				'shipping'   => admin_url( 'admin.php?page=wc-settings&tab=shipping' ),
+				'logs'       => admin_url( 'admin.php?page=wc-status&tab=logs&source=fleetbase' ),
 			],
 			'consoleUrl'               => 'https://console.fleetbase.io',
 			'signupUrl'                => 'https://console.fleetbase.io/onboard',
@@ -78,6 +82,14 @@ final class Assets implements Hookable {
 			'webhookLast'              => \Fleetbase\WooCommerce\Sync\WebhookController::last(),
 			'pollLast'                 => get_option( \Fleetbase\WooCommerce\Sync\Poller::OPTION_LAST, null ),
 			'settings'                 => $plugin->settings()->all(),
+			'capabilities'             => [
+				'manage'   => \Fleetbase\WooCommerce\Support\Capabilities::can_manage(),
+				'dispatch' => \Fleetbase\WooCommerce\Support\Capabilities::can_dispatch(),
+			],
+			'navigator'                => [
+				'ios'     => 'https://apps.apple.com/app/fleetbase-navigator/id1554208255',
+				'android' => 'https://play.google.com/store/apps/details?id=io.fleetbase.navigator',
+			],
 		];
 
 		/**

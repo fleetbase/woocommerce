@@ -15,7 +15,7 @@ final class Menu implements Hookable {
 
 	public const CAPABILITY = 'manage_woocommerce';
 
-	/** @var array<string, array{title:string, menu:string, page:string}>|null */
+	/** @var array<string, array{title:string, menu:string, page:string, cap:string}>|null */
 	private ?array $pages = null;
 
 	public function register(): void {
@@ -25,32 +25,61 @@ final class Menu implements Hookable {
 	/**
 	 * Built lazily so translated labels are not loaded before init.
 	 *
-	 * @return array<string, array{title:string, menu:string, page:string}>
+	 * @return array<string, array{title:string, menu:string, page:string, cap:string}>
 	 */
 	public function pages(): array {
 		if ( null === $this->pages ) {
-			$pages = [
-				'fleetbase'          => [
+			$manage   = self::CAPABILITY;
+			$dispatch = \Fleetbase\WooCommerce\Support\Capabilities::CAP;
+			$pages    = [
+				'fleetbase'               => [
 					'title' => __( 'Fleetbase', 'fleetbase-for-woocommerce' ),
 					'menu'  => __( 'Dashboard', 'fleetbase-for-woocommerce' ),
 					'page'  => 'dashboard',
+					'cap'   => $dispatch,
 				],
-				'fleetbase-setup'    => [
-					'title' => __( 'Fleetbase setup', 'fleetbase-for-woocommerce' ),
-					'menu'  => __( 'Setup', 'fleetbase-for-woocommerce' ),
-					'page'  => 'setup',
+				'fleetbase-deliveries'    => [
+					'title' => __( 'Deliveries', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Deliveries', 'fleetbase-for-woocommerce' ),
+					'page'  => 'deliveries',
+					'cap'   => $dispatch,
 				],
-				'fleetbase-settings' => [
+				'fleetbase-drivers'       => [
+					'title' => __( 'Drivers', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Drivers', 'fleetbase-for-woocommerce' ),
+					'page'  => 'drivers',
+					'cap'   => $dispatch,
+				],
+				'fleetbase-vehicles'      => [
+					'title' => __( 'Vehicles', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Vehicles', 'fleetbase-for-woocommerce' ),
+					'page'  => 'vehicles',
+					'cap'   => $dispatch,
+				],
+				'fleetbase-service-rates' => [
+					'title' => __( 'Service rates', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Service rates', 'fleetbase-for-woocommerce' ),
+					'page'  => 'rates',
+					'cap'   => $manage,
+				],
+				'fleetbase-settings'      => [
 					'title' => __( 'Fleetbase settings', 'fleetbase-for-woocommerce' ),
 					'menu'  => __( 'Settings', 'fleetbase-for-woocommerce' ),
 					'page'  => 'settings',
+					'cap'   => $manage,
+				],
+				'fleetbase-setup'         => [
+					'title' => __( 'Fleetbase setup', 'fleetbase-for-woocommerce' ),
+					'menu'  => __( 'Setup', 'fleetbase-for-woocommerce' ),
+					'page'  => 'setup',
+					'cap'   => $manage,
 				],
 			];
 
 			/**
 			 * Filter the admin pages registered under the Fleetbase menu.
 			 *
-			 * @param array<string, array{title:string, menu:string, page:string}> $pages
+			 * @param array<string, array{title:string, menu:string, page:string, cap:string}> $pages
 			 */
 			$this->pages = (array) apply_filters( 'fleetbase_wc_admin_pages', $pages );
 		}
@@ -61,14 +90,14 @@ final class Menu implements Hookable {
 		add_menu_page(
 			__( 'Fleetbase', 'fleetbase-for-woocommerce' ),
 			__( 'Fleetbase', 'fleetbase-for-woocommerce' ),
-			self::CAPABILITY,
+			\Fleetbase\WooCommerce\Support\Capabilities::CAP,
 			'fleetbase',
 			[ $this, 'render' ],
 			$this->icon(),
 			56
 		);
 		foreach ( $this->pages() as $slug => $page ) {
-			add_submenu_page( 'fleetbase', $page['title'], $page['menu'], self::CAPABILITY, $slug, [ $this, 'render' ] );
+			add_submenu_page( 'fleetbase', $page['title'], $page['menu'], (string) ( $page['cap'] ?? self::CAPABILITY ), $slug, [ $this, 'render' ] );
 		}
 	}
 
