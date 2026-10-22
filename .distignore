@@ -24,3 +24,8 @@ webpack.config.js
 playwright.config.js
 /test-results
 /playwright-report
+.prettierrc.js
+.eslintrc.js
+.github
+phpstan-php81.neon
+.phpunit.cache

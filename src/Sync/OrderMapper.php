@@ -225,7 +225,7 @@ final class OrderMapper {
 					$entity['height']          = $height;
 					$entity['dimensions_unit'] = self::dimension_unit( (string) ( $this->config['dimension_unit'] ?? 'cm' ) );
 				}
-				$description = trim( wp_strip_all_tags_compat( (string) $product->get_short_description() ) );
+				$description = trim( self::strip_tags( (string) $product->get_short_description() ) );
 				if ( '' !== $description ) {
 					$entity['description'] = mb_substr( $description, 0, 500 );
 				}
@@ -301,13 +301,8 @@ final class OrderMapper {
 		];
 		return $map[ $wc_unit ] ?? 'cm';
 	}
-}
 
-if ( ! function_exists( __NAMESPACE__ . '\\wp_strip_all_tags_compat' ) ) {
-	/**
-	 * strip tags with or without WordPress.
-	 */
-	function wp_strip_all_tags_compat( string $text ): string {
+	private static function strip_tags( string $text ): string {
 		return function_exists( 'wp_strip_all_tags' ) ? wp_strip_all_tags( $text ) : strip_tags( $text ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags
 	}
 }

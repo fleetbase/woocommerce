@@ -262,10 +262,10 @@ Effort is in focused working days for one engineer with this codebase in front o
 - REST proxy controllers with validation and capability checks. React pages: Deliveries, Drivers, Vehicles, Service rates, each with list, create, edit, and error states. Order screen actions: assign driver, dispatch, cancel, resync. Bulk actions.
 - Done when: a dispatcher can run a day's deliveries without opening the Fleetbase console: create a driver who can sign into Navigator, create a rate that appears at checkout, assign and dispatch from WordPress.
 
-### Phase 7: Self-Hosted Connector add-on (1 day plugin side, depends on F1)
+### Phase 7: Self-Hosted Connector add-on (1 day plugin side, depends on F1) — PENDING, blocked on F1
 - Connection provider for custom hosts, license field, verification client with caching and grace, renewal notices. Stub verification server for local tests.
 
-### Phase 8: Hardening and release (2 days)
+### Phase 8: Hardening and release (2 days) — DONE 2026-10-22 (submission itself not performed)
 - Test matrix: block and classic checkout; HPOS on and off; PHP 8.1 and 8.3; WooCommerce 9.5 and 10.5; Cloud and self-hosted; Fulfillments on and off. Playwright flows for checkout, sync, and status round trip.
 - Accessibility pass on admin pages and checkout control. Performance check: no synchronous Fleetbase calls on page loads other than checkout rate calculation.
 - readme.txt, screenshots, external services disclosure, privacy section, changelog, GitHub release workflow, wordpress.org SVN deploy workflow, docs site page on fleetbase.io.
