@@ -13,3 +13,9 @@ parameters:
   bootstrapFiles:
     - tests/phpstan-bootstrap.php
   treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    # The *.asset.php manifests are produced by `pnpm build` and are not in git.
+    # The includes are guarded by file_exists(); CI analyses without them.
+    -
+      identifier: include.fileNotFound
+      reportUnmatched: false

@@ -48,36 +48,29 @@ jobs:
   plugin-check:
     name: WordPress Plugin Check
     runs-on: ubuntu-latest
-    needs: [ js ]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: assets-build
-          path: assets/build
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           tools: composer:v2
-      - run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      # Stage the distributable the same way a release does. The staged
+      # directory is named after the plugin slug; scanning the checkout itself
+      # would mount it as "woocommerce" (the repository name) and collide with
+      # WooCommerce.
+      - run: bash scripts/build.sh
       - uses: wordpress/plugin-check-action@v1
         with:
+          build-dir: build/fleetbase-for-woocommerce
           categories: |
             plugin_repo
             security
           exclude-directories: |
             vendor
-            node_modules
-            tests
-            docs
-            scripts
-            build
-          exclude-files: |
-            phpunit.xml.dist
-            phpstan.neon
-            phpcs.xml
-            webpack.config.js
-            composer.json
-            composer.lock
-            package.json
-            pnpm-lock.yaml
