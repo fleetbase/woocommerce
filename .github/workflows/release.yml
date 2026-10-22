@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and attach the plugin zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer:v2
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Check the tag matches the plugin version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          HEADER=$(grep -m1 "^ \* Version:" fleetbase-for-woocommerce.php | awk '{print $3}')
+          test "$TAG" = "$HEADER" || { echo "Tag $TAG does not match plugin header version $HEADER"; exit 1; }
+      - run: composer install --no-interaction --prefer-dist
+      - run: bash scripts/build.sh
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: build/fleetbase-for-woocommerce.zip
+          generate_release_notes: true

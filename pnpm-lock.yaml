@@ -33,6 +33,12 @@ importers:
         specifier: ^4.0.0
         version: 4.57.0
     devDependencies:
+      '@axe-core/playwright':
+        specifier: ^4.10.0
+        version: 4.14.0(playwright-core@1.64.1)
+      '@playwright/test':
+        specifier: ^1.50.0
+        version: 1.64.1
       '@wordpress/eslint-plugin':
         specifier: ^22.0.0
         version: 22.22.0(@babel/core@7.25.7)(eslint@8.57.1)(jest@29.7.0(@types/node@26.6.5)(babel-plugin-macros@3.1.0))(typescript@5.9.3)(wp-prettier@3.0.3)
@@ -85,6 +91,12 @@ packages:
 
   '@ariakit/utils@0.2.2':
     resolution: {integrity: sha512-OjdYlnJ8dW6XkBHirX0jx8bzLm577IL9Fe8T9dPrNKgCVvvJJiUL18iA5Oqqq9+FQ5ahhx5t4WgdE+2AaqG3IA==}
+
+  '@axe-core/playwright@4.14.0':
+    resolution: {integrity: sha512-SGUhG5PIHd2eMdpgBF2PyQLOhX+qyDR2PT4cmoS4Qk2ak+jX/rrSvst9l0PGv5WTHolKpUMvVmoHpr4cZgf1RQ==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      playwright-core: '>= 1.0.0'
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -6878,6 +6890,11 @@ snapshots:
       '@ariakit/utils': 0.2.2
 
   '@ariakit/utils@0.2.2': {}
+
+  '@axe-core/playwright@4.14.0(playwright-core@1.64.1)':
+    dependencies:
+      axe-core: 4.14.0
+      playwright-core: 1.64.1
 
   '@babel/code-frame@7.29.7':
     dependencies:

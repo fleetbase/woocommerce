@@ -21,3 +21,6 @@ webpack.config.js
 *.md
 !/readme.txt
 .gitkeep
+playwright.config.js
+/test-results
+/playwright-report

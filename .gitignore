@@ -13,3 +13,6 @@
 .env.*
 /languages/*.pot
 !/languages/.gitkeep
+/tests/E2E/.auth/
+/test-results/
+/playwright-report/

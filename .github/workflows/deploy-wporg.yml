@@ -1,0 +1,41 @@
+name: Deploy to WordPress.org
+
+# Manual only. Requires the SVN_USERNAME and SVN_PASSWORD secrets and a tag that matches the plugin version.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to deploy, for example v1.0.0'
+        required: true
+
+jobs:
+  deploy:
+    name: Build and commit to the plugin SVN
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer:v2
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: composer install --no-interaction --prefer-dist
+      - run: bash scripts/build.sh
+      - name: Deploy the built plugin
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: false
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: fleetbase-for-woocommerce
+          BUILD_DIR: build/fleetbase-for-woocommerce
+          VERSION: ${{ inputs.tag }}

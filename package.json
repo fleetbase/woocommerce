@@ -10,14 +10,18 @@
     "lint:js": "wp-scripts lint-js assets/src",
     "lint:css": "wp-scripts lint-style assets/src",
     "format": "wp-scripts format assets/src",
-    "packages-update": "wp-scripts packages-update"
+    "packages-update": "wp-scripts packages-update",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^30.0.0",
-    "typescript": "^5.6.3",
-    "prettier": "npm:wp-prettier@^3.0.3",
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.50.0",
+    "@wordpress/eslint-plugin": "^22.0.0",
     "@wordpress/prettier-config": "^4.0.0",
-    "@wordpress/eslint-plugin": "^22.0.0"
+    "@wordpress/scripts": "^30.0.0",
+    "prettier": "npm:wp-prettier@^3.0.3",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^7.0.0",
