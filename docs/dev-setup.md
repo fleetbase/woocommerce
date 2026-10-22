@@ -143,6 +143,39 @@ shop managers and the `fleetbase_dispatcher` role on activation); Service rates 
 `manage_woocommerce`. Every page talks to `/wp-json/fleetbase/v1/*` proxies, never to Fleetbase directly.
 Fleetbase returns raw SQL in some error bodies; the proxies pass messages through for admins only.
 
+### End-to-end and accessibility tests
+
+```bash
+pnpm test:e2e            # Playwright against the sandbox; FBWC_BASE_URL, FBWC_DEV_USER, FBWC_DEV_PASS override defaults
+pnpm test:e2e:headed     # watch it run
+```
+
+`tests/E2E/delivery-flow.spec.js` places a scheduled cash-on-delivery order through the block checkout, waits for the
+sync (WP-Cron is nudged by visiting admin pages), assigns and dispatches from the Deliveries page and checks the
+customer's tracking. `classic-checkout.spec.js` covers the shortcode checkout. `accessibility.spec.js` runs axe
+(WCAG 2.1 A and AA, serious and critical impact) on every admin page and on the checkout delivery-time control.
+
+### Where the plugin calls Fleetbase
+
+Synchronous calls happen only where the user is waiting for the answer: checkout rate calculation (cached per
+address), the admin REST proxies behind the Fleetbase pages, manual order actions, and the tracking page timeline
+(cached for a minute). Order sync, reconciliation and polling run in Action Scheduler. Nothing on ordinary front-end
+or admin page loads touches the API; keep it that way when adding features.
+
+### Background jobs in the sandbox
+
+The WordPress container cannot reach its own public URL (`localhost:8800` points at the host), so WP-Cron's
+loopback spawn and Action Scheduler's async runner both fail silently. That is why the admin shows "past-due
+actions". Run the queue by hand, or on a schedule from the host:
+
+```bash
+wpc action-scheduler run --force          # everything that is due
+wpc action-scheduler run --hooks=fleetbase_wc_sync_order,fleetbase_wc_reconcile_order,fleetbase_wc_poll_orders --force
+```
+
+The end-to-end tests do not rely on the queue: they trigger the sync through the Deliveries page's resync action.
+On a real host with working cron this is not an issue.
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.

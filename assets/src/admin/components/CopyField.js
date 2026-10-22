@@ -23,8 +23,10 @@ export default function CopyField( { value, label } ) {
 			) }
 			<div className="fbwc-copy__row">
 				<input
+					id={ inputId }
 					type="text"
 					readOnly
+					aria-label={ label || 'Value' }
 					value={ value }
 					onFocus={ ( e ) => e.target.select() }
 					className="fbwc-copy__input"

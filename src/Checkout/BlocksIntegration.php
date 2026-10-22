@@ -135,6 +135,31 @@ final class BlocksIntegration implements Hookable, IntegrationInterface {
 	 * Store API: react to the customer's choice (so quotes refresh) and persist it on the order.
 	 */
 	public function register_store_api(): void {
+		// Declare the checkout extension data, otherwise the Store API strips it from the checkout request.
+		if ( class_exists( \Automattic\WooCommerce\StoreApi\StoreApi::class ) && class_exists( \Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema::class ) ) {
+			try {
+				\Automattic\WooCommerce\StoreApi\StoreApi::container()->get( \Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema::class )->register_endpoint_data(
+					[
+						'endpoint'        => \Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema::IDENTIFIER,
+						'namespace'       => 'fleetbase',
+						'schema_callback' => static function (): array {
+							return [
+								'delivery' => [
+									'description' => 'Delivery time choice: "asap" or a date and window.',
+									'type'        => 'string',
+									'context'     => [ 'view', 'edit' ],
+									'optional'    => true,
+								],
+							];
+						},
+						'schema_type'     => ARRAY_A,
+					]
+				);
+			} catch ( \Throwable $e ) {
+				\Fleetbase\WooCommerce\Plugin::instance()->logger()->debug( 'Checkout extension schema not registered', [ 'error' => $e->getMessage() ] );
+			}
+		}
+
 		if ( function_exists( 'woocommerce_store_api_register_update_callback' ) ) {
 			woocommerce_store_api_register_update_callback(
 				[

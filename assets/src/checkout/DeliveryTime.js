@@ -34,22 +34,25 @@ export default function DeliveryTime( { checkoutExtensionData } ) {
 	);
 	const [ windowValue, setWindowValue ] = useState( initial.window );
 
-	const { shippingRates, noService, noServiceMessage } = useSelect(
-		( select ) => {
-			const store = select( 'wc/store/cart' );
-			const data = store.getCartData ? store.getCartData() : {};
-			const ext = ( data.extensions && data.extensions.fleetbase ) || {};
-			return {
-				shippingRates: store.getShippingRates
-					? store.getShippingRates()
-					: [],
-				noService: !! ext.no_service,
-				noServiceMessage:
-					ext.no_service_message || settings.noServiceMessage,
-			};
-		},
-		[ settings.noServiceMessage ]
-	);
+	const { shippingRates, noService, noServiceMessage, cartChoice } =
+		useSelect(
+			( select ) => {
+				const store = select( 'wc/store/cart' );
+				const data = store.getCartData ? store.getCartData() : {};
+				const ext =
+					( data.extensions && data.extensions.fleetbase ) || {};
+				return {
+					shippingRates: store.getShippingRates
+						? store.getShippingRates()
+						: [],
+					noService: !! ext.no_service,
+					cartChoice: ext.delivery_choice || '',
+					noServiceMessage:
+						ext.no_service_message || settings.noServiceMessage,
+				};
+			},
+			[ settings.noServiceMessage ]
+		);
 
 	const selectedDate = useMemo(
 		() => dates.find( ( d ) => d.date === date ) || dates[ 0 ],
@@ -57,6 +60,21 @@ export default function DeliveryTime( { checkoutExtensionData } ) {
 	);
 
 	const value = mode === 'asap' ? 'asap' : windowValue;
+
+	// A remount (WooCommerce re-renders shipping options when rates change) must not
+	// discard a choice the session already holds.
+	useEffect( () => {
+		if ( ! cartChoice || cartChoice === value ) {
+			return;
+		}
+		const fromCart = splitValue( cartChoice );
+		setMode( fromCart.mode );
+		if ( fromCart.date ) {
+			setDate( fromCart.date );
+			setWindowValue( fromCart.window );
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- only react to the cart changing.
+	}, [ cartChoice ] );
 
 	useEffect( () => {
 		if ( setExtensionData ) {

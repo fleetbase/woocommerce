@@ -21,7 +21,9 @@ test( 'classic checkout shows rates with descriptions, a delivery-time select, a
 	await select.selectOption( optionValue || 'asap' );
 	await page.waitForTimeout( 3000 );
 
-	await page.locator( '#payment_method_cod' ).check();
+	// WooCommerce hides the radio input itself; its label is the clickable target.
+	await page.locator( 'label[for="payment_method_cod"]' ).click();
+	await expect( page.locator( '#payment_method_cod' ) ).toBeChecked();
 	await page.locator( '#place_order' ).click();
 	await page.waitForURL( /order-received/, { timeout: 60_000 } );
 	expect( orderIdFromUrl( page.url() ) ).toBeGreaterThan( 0 );

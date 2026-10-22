@@ -1,5 +1,5 @@
 import { CheckboxControl, TextControl } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 const DAYS = [
 	[ 'mon', __( 'Monday', 'fleetbase-for-woocommerce' ) ],
@@ -50,6 +50,15 @@ export default function DeliveryHours( { hours, onChange } ) {
 							<td>{ label }</td>
 							<td>
 								<CheckboxControl
+									label={ sprintf(
+										/* translators: %s: day name */
+										__(
+											'Deliveries on %s',
+											'fleetbase-for-woocommerce'
+										),
+										label
+									) }
+									hideLabelFromVision
 									checked={ !! day.enabled }
 									onChange={ ( enabled ) =>
 										update( key, { enabled } )
@@ -60,6 +69,15 @@ export default function DeliveryHours( { hours, onChange } ) {
 							<td>
 								<TextControl
 									type="time"
+									label={ sprintf(
+										/* translators: %s: day name */
+										__(
+											'%s opening time',
+											'fleetbase-for-woocommerce'
+										),
+										label
+									) }
+									hideLabelFromVision
 									value={ day.open }
 									disabled={ ! day.enabled }
 									onChange={ ( open ) =>
@@ -71,6 +89,15 @@ export default function DeliveryHours( { hours, onChange } ) {
 							<td>
 								<TextControl
 									type="time"
+									label={ sprintf(
+										/* translators: %s: day name */
+										__(
+											'%s closing time',
+											'fleetbase-for-woocommerce'
+										),
+										label
+									) }
+									hideLabelFromVision
 									value={ day.close }
 									disabled={ ! day.enabled }
 									onChange={ ( close ) =>

@@ -121,6 +121,7 @@ final class NoService implements Hookable {
 					return [
 						'no_service'         => self::applies(),
 						'no_service_message' => self::message(),
+						'delivery_choice'    => \Fleetbase\WooCommerce\Checkout\DeliveryChoice::current_value(),
 					];
 				},
 				'schema_callback' => static function (): array {
@@ -130,6 +131,10 @@ final class NoService implements Hookable {
 							'readonly' => true,
 						],
 						'no_service_message' => [
+							'type'     => 'string',
+							'readonly' => true,
+						],
+						'delivery_choice'    => [
 							'type'     => 'string',
 							'readonly' => true,
 						],

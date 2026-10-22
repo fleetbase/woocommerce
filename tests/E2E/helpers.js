@@ -19,6 +19,11 @@ async function addProductToCart( page, productId = 15 ) {
  */
 async function fillBlockAddress( page ) {
 	await page.goto( '/checkout/' );
+	// Returning customers see a collapsed address card; open it so the fields are editable.
+	const edit = page.getByRole( 'button', { name: /Edit shipping address/i } );
+	if ( await edit.isVisible().catch( () => false ) ) {
+		await edit.click();
+	}
 	await page.getByLabel( 'First name' ).first().fill( SEATTLE.first );
 	await page.getByLabel( 'Last name' ).first().fill( SEATTLE.last );
 	await page.getByLabel( 'Address', { exact: true } ).first().fill( SEATTLE.address );
@@ -28,23 +33,33 @@ async function fillBlockAddress( page ) {
 }
 
 /**
- * Reads plugin REST data through the browser session (nonce is injected by WordPress).
+ * Calls a plugin REST route through the browser session (WordPress injects the nonce).
  */
+async function rest( page, path, method = 'GET' ) {
+	return page.evaluate(
+		async ( { p, m } ) => {
+			const nonce = ( window.fleetbaseWc && window.fleetbaseWc.nonce ) || ( window.wpApiSettings && window.wpApiSettings.nonce ) || '';
+			const res = await fetch( `/wp-json/fleetbase/v1/${ p }`, { method: m, headers: { 'X-WP-Nonce': nonce } } );
+			return res.json();
+		},
+		{ p: path, m: method }
+	);
+}
+
 async function restGet( page, path ) {
-	return page.evaluate( async ( p ) => {
-		const nonce = window.wpApiSettings ? window.wpApiSettings.nonce : '';
-		const res = await fetch( `/wp-json/fleetbase/v1/${ p }`, { headers: { 'X-WP-Nonce': nonce } } );
-		return res.json();
-	}, path );
+	return rest( page, path, 'GET' );
 }
 
 /**
- * Wait until the order has a Fleetbase id, nudging WP-Cron by visiting admin pages.
+ * Wait until the order has a Fleetbase id. The sandbox container cannot reach its own
+ * loopback URL, so Action Scheduler never runs on page loads there; the dispatcher's
+ * "Send to Fleetbase" action runs the same sync inline, which is what this uses.
  */
-async function waitForSync( page, orderId, attempts = 24 ) {
+async function waitForSync( page, orderId, attempts = 6 ) {
+	await page.goto( '/wp-admin/admin.php?page=fleetbase-deliveries' );
+	await rest( page, `deliveries/${ orderId }/resync`, 'POST' );
 	for ( let i = 0; i < attempts; i++ ) {
-		await page.goto( '/wp-admin/admin.php?page=fleetbase-deliveries' );
-		const data = await restGet( page, `deliveries?status=all&per_page=50` );
+		const data = await restGet( page, 'deliveries?status=all&per_page=50' );
 		const row = ( data.deliveries || [] ).find( ( d ) => d.id === orderId );
 		if ( row && row.fleetbase_id ) {
 			return row;
@@ -59,4 +74,4 @@ function orderIdFromUrl( url ) {
 	return m ? Number( m[ 1 ] ) : 0;
 }
 
-module.exports = { SEATTLE, addProductToCart, fillBlockAddress, restGet, waitForSync, orderIdFromUrl };
+module.exports = { SEATTLE, addProductToCart, fillBlockAddress, rest, restGet, waitForSync, orderIdFromUrl };

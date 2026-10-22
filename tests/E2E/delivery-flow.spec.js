@@ -10,7 +10,8 @@ test( 'block checkout quotes a live rate, takes a delivery window and places a C
 	await addProductToCart( page, 15 );
 	await fillBlockAddress( page );
 
-	// Both seeded rates appear with their delivery promise.
+	// The Checkout block shows a rate's description only while it is selected.
+	await page.getByRole( 'radio', { name: /Standard Delivery/ } ).check();
 	await expect( page.getByText( 'Same day, 2-4 hours' ).first() ).toBeVisible();
 
 	// Scheduling control: choose a day and window, which refreshes quotes.
@@ -28,7 +29,7 @@ test( 'block checkout quotes a live rate, takes a delivery window and places a C
 	orderId = orderIdFromUrl( page.url() );
 	expect( orderId ).toBeGreaterThan( 0 );
 	await expect( page.getByText( 'Delivery time:' ) ).toBeVisible();
-	await expect( page.getByText( 'via Standard Delivery' ).or( page.getByText( 'via Eco Delivery' ) ).first() ).toBeVisible();
+	await expect( page.getByRole( 'row', { name: /Shipping:/ } ) ).toContainText( /Standard Delivery|Eco Delivery|Express Delivery/ );
 } );
 
 test( 'the order is sent to Fleetbase and gets a tracking number', async ( { page } ) => {
@@ -37,6 +38,7 @@ test( 'the order is sent to Fleetbase and gets a tracking number', async ( { pag
 	expect( row.fleetbase_id ).toMatch( /^order_/ );
 	expect( row.tracking_number ).not.toEqual( '' );
 	expect( row.window ).not.toEqual( '' );
+	expect( row.window ).not.toEqual( 'As soon as possible' );
 } );
 
 test( 'a dispatcher assigns a driver and dispatches from the Deliveries page', async ( { page } ) => {
