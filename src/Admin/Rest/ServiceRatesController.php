@@ -28,7 +28,12 @@ final class ServiceRatesController extends RestController {
 	 */
 	public function index() {
 		try {
-			$rates = Plugin::instance()->api()->service_rates()->all( [ 'limit' => 100 ] );
+			$rates = Plugin::instance()->api()->service_rates()->all(
+				[
+					'limit' => 100,
+					'with'  => [ 'serviceArea', 'zone' ],
+				]
+			);
 		} catch ( \Throwable $e ) {
 			return $this->error_from_exception( $e );
 		}

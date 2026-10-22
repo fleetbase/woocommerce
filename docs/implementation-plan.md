@@ -258,7 +258,7 @@ Effort is in focused working days for one engineer with this codebase in front o
 - Webhook receiver, reconciler, poller, custom status, status mapping settings, notes, Fulfillments integration, out-for-delivery email, tracking on thank-you, My Account and emails, tracking shortcode and block.
 - Done when: driving an order through dispatch and completion in the Fleetbase console updates the WooCommerce order with no webhook configured (poll) and within seconds with the webhook configured; the customer sees the tracking link everywhere listed.
 
-### Phase 6: Fleet management pages (5 days)
+### Phase 6: Fleet management pages (5 days) — DONE 2026-10-22
 - REST proxy controllers with validation and capability checks. React pages: Deliveries, Drivers, Vehicles, Service rates, each with list, create, edit, and error states. Order screen actions: assign driver, dispatch, cancel, resync. Bulk actions.
 - Done when: a dispatcher can run a day's deliveries without opening the Fleetbase console: create a driver who can sign into Navigator, create a rate that appears at checkout, assign and dispatch from WordPress.
 

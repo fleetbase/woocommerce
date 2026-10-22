@@ -83,6 +83,8 @@ Date: 2026-10-21. Sources: local Fleetbase source (`oss/fleetbase-dev`, `fleetba
 - `POST /v1/payloads` with `pickup`, `dropoff`, `entities`, `type` and the COD fields, then `POST /v1/orders` with `payload: payload_…`, works for cash-on-delivery orders. The order response then carries `cod_amount`/`cod_currency`.
 - The created order's `customer.id` is a `contact_…` id, usable directly as `customer` on later orders.
 - `POST /v1/orders/{id}/complete` succeeded on a dispatched order with no waypoint activity recorded, so the "every waypoint must be completed" rule read from the source does not block the simple pickup/dropoff case.
+- `POST /v1/service-rates` rejects `duration_terms: ""` with "must be a string" (empty strings become null server-side). Omit empty optional strings.
+- `GET /v1/service-rates` only includes `service_area` and `zone` when asked for with `with[]=serviceArea&with[]=zone`.
 - `GET /v1/drivers?sort=name` returns a 500 with the raw SQL error (`name` is on the users table). Sort drivers by `created_at` only. The API echoes SQL in error bodies, which the plugin shows only to admins.
 - The webhook envelope's `data.id` is the order public id for `order.*` events; the plugin also accepts `data.order` for entity and tracking events.
 - Creating an order with `service_quote` makes Fleetbase create a `purchase_rate` with the quoted amount, visible on the order a few seconds later.

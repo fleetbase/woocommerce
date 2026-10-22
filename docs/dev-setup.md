@@ -136,6 +136,13 @@ Drive a delivery from the API: `PUT /v1/orders/{id}` with `{"driver":"driver_…
 once per event, the out-for-delivery email fires (the sandbox has no mail relay, so wp-cli prints a sendmail
 error), and `/track-delivery/?tracking=…` shows the public timeline.
 
+### Fleet pages and roles
+
+Deliveries, Drivers and Vehicles need the `manage_fleetbase_deliveries` capability (granted to administrators,
+shop managers and the `fleetbase_dispatcher` role on activation); Service rates and Settings need
+`manage_woocommerce`. Every page talks to `/wp-json/fleetbase/v1/*` proxies, never to Fleetbase directly.
+Fleetbase returns raw SQL in some error bodies; the proxies pass messages through for admins only.
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.

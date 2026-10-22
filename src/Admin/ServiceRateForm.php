@@ -49,9 +49,14 @@ final class ServiceRateForm {
 			'currency'                => $currency,
 			'per_meter_unit'          => $unit,
 			'base_fee'                => Money::to_minor( (string) ( $form['base_fee'] ?? '0' ), $currency ),
-			'duration_terms'          => trim( (string) ( $form['duration_terms'] ?? '' ) ),
 			'estimated_days'          => max( 0, (int) ( $form['estimated_days'] ?? 0 ) ),
 		];
+
+		// Laravel turns empty strings into null, which then fails Fleetbase's "string" rule.
+		$duration = trim( (string) ( $form['duration_terms'] ?? '' ) );
+		if ( '' !== $duration ) {
+			$request['duration_terms'] = $duration;
+		}
 
 		if ( 'per_meter' === $method ) {
 			$fee = trim( (string) ( $form['per_meter_flat_rate_fee'] ?? '' ) );
