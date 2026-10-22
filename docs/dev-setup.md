@@ -122,6 +122,20 @@ failure; validation and authentication errors fail immediately. "Send to Fleetba
 menu and the Fleetbase delivery box force a re-sync (an existing Fleetbase order with the same internal id is
 adopted, never duplicated).
 
+### Status sync back
+
+Two paths feed `Sync\Reconciler`, which always re-fetches the order from Fleetbase:
+
+- Webhook: `POST /wp-json/fleetbase/v1/webhook/{site token}` (the wizard shows the URL). From inside a Fleetbase
+  container the store is `http://host.docker.internal:8800`. A GET on the same URL answers `{"ok":true}`.
+- Poll: the `fleetbase_wc_poll_orders` recurring action (every `polling.interval_minutes`) reconciles open
+  deliveries; run it by hand with `wpc eval 'fleetbase_wc()->get(\Fleetbase\WooCommerce\Sync\Poller::class)->run();'`.
+
+Drive a delivery from the API: `PUT /v1/orders/{id}` with `{"driver":"driver_…"}`, `PATCH /v1/orders/{id}/dispatch`,
+`POST /v1/orders/{id}/complete`. WooCommerce moves processing → out-for-delivery → completed, notes are added
+once per event, the out-for-delivery email fires (the sandbox has no mail relay, so wp-cli prints a sendmail
+error), and `/track-delivery/?tracking=…` shows the public timeline.
+
 ## Gotchas learned on the way
 
 - `wp-api-fetch` already carries WordPress's root URL and nonce middleware. Never register a second root middleware; pass paths as `/fleetbase/v1/...`.

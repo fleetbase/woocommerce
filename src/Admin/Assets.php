@@ -75,6 +75,8 @@ final class Assets implements Hookable {
 			'webhookUrl'               => Plugin::instance()->get( \Fleetbase\WooCommerce\Support\WebhookUrl::class )->url(),
 			'wizardCompleted'          => (bool) get_option( 'fleetbase_wc_wizard_completed' ),
 			'shippingMethodConfigured' => StoreInfo::fleetbase_shipping_method_configured(),
+			'webhookLast'              => \Fleetbase\WooCommerce\Sync\WebhookController::last(),
+			'pollLast'                 => get_option( \Fleetbase\WooCommerce\Sync\Poller::OPTION_LAST, null ),
 			'settings'                 => $plugin->settings()->all(),
 		];
 

@@ -17,6 +17,26 @@ function dotClass( ok ) {
 	return ok ? 'fbwc-dot fbwc-dot--ok' : 'fbwc-dot fbwc-dot--warn';
 }
 
+function webhookSummary( state ) {
+	if ( state.webhookLast && state.webhookLast.time ) {
+		return sprintf(
+			/* translators: 1: date and time, 2: event name */
+			__( 'Webhook received %1$s (%2$s)', 'fleetbase-for-woocommerce' ),
+			new Date( state.webhookLast.time * 1000 ).toLocaleString(),
+			state.webhookLast.event || '—'
+		);
+	}
+	const minutes = state.settings?.polling?.interval_minutes || 5;
+	return sprintf(
+		/* translators: %d: minutes */
+		__(
+			'No webhook yet; polling every %d minutes',
+			'fleetbase-for-woocommerce'
+		),
+		minutes
+	);
+}
+
 function Row( { label, value, ok } ) {
 	return (
 		<div className="fbwc-status-row">
@@ -185,6 +205,14 @@ export default function StatusCard( { state, onChange } ) {
 									: '—'
 							}
 							ok={ ! connection.last_error }
+						/>
+						<Row
+							label={ __(
+								'Status updates',
+								'fleetbase-for-woocommerce'
+							) }
+							value={ webhookSummary( state ) }
+							ok={ !! state.webhookLast }
 						/>
 						{ connection.last_error && (
 							<Notice status="warning" isDismissible={ false }>

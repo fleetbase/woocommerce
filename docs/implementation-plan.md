@@ -254,7 +254,7 @@ Effort is in focused working days for one engineer with this codebase in front o
 - `OrderMapper`, `OrderSyncer`, Action Scheduler jobs with backoff, idempotency guards, COD payload path, customer contact cache, cancellation propagation, order meta box (read-only parts), order list column.
 - Done when: paying for an order in the sandbox produces a correct Fleetbase order within seconds, with entities, quote, scheduled time and customer; replaying the hook does not duplicate; a failed call retries and surfaces in the log.
 
-### Phase 5: Status sync in (3 days)
+### Phase 5: Status sync in (3 days) — DONE 2026-10-22
 - Webhook receiver, reconciler, poller, custom status, status mapping settings, notes, Fulfillments integration, out-for-delivery email, tracking on thank-you, My Account and emails, tracking shortcode and block.
 - Done when: driving an order through dispatch and completion in the Fleetbase console updates the WooCommerce order with no webhook configured (poll) and within seconds with the webhook configured; the customer sees the tracking link everywhere listed.
 
