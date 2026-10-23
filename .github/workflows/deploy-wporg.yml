@@ -1,7 +1,12 @@
 name: Deploy to WordPress.org
 
-# Manual only. Requires the SVN_USERNAME and SVN_PASSWORD secrets and a tag that matches the plugin version.
+# Runs when a GitHub Release is published (the Release workflow publishes one for every v* tag)
+# and on demand for a given tag. It commits the built plugin to the WordPress.org SVN
+# repository, which is how installed sites receive the update. Needs the SVN_USERNAME and
+# SVN_PASSWORD secrets; until they exist the job logs a notice and does nothing.
 on:
+  release:
+    types: [ published ]
   workflow_dispatch:
     inputs:
       tag:
@@ -12,24 +17,54 @@ jobs:
   deploy:
     name: Build and commit to the plugin SVN
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.event.release.tag_name }}
     steps:
+      - name: Check the SVN credentials exist
+        id: creds
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          if [ -z "$SVN_USERNAME" ] || [ -z "$SVN_PASSWORD" ]; then
+            echo "::notice::SVN_USERNAME / SVN_PASSWORD are not set; skipping the WordPress.org deploy of $TAG."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v4
+        if: steps.creds.outputs.ready == 'true'
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ env.TAG }}
+      - name: Check the tag matches the plugin version and stable tag
+        if: steps.creds.outputs.ready == 'true'
+        run: |
+          VERSION="${TAG#v}"
+          HEADER=$(grep -m1 "^ \* Version:" fleetbase-for-woocommerce.php | awk '{print $3}')
+          STABLE=$(grep -m1 "^Stable tag:" readme.txt | awk '{print $3}')
+          test "$VERSION" = "$HEADER" || { echo "Tag $VERSION does not match plugin header version $HEADER"; exit 1; }
+          test "$VERSION" = "$STABLE" || { echo "Tag $VERSION does not match readme.txt stable tag $STABLE"; exit 1; }
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
       - uses: shivammathur/setup-php@v2
+        if: steps.creds.outputs.ready == 'true'
         with:
           php-version: '8.1'
           tools: composer:v2
       - uses: pnpm/action-setup@v4
+        if: steps.creds.outputs.ready == 'true'
         with:
           version: 9
       - uses: actions/setup-node@v4
+        if: steps.creds.outputs.ready == 'true'
         with:
           node-version: 22
           cache: pnpm
       - run: composer install --no-interaction --prefer-dist
+        if: steps.creds.outputs.ready == 'true'
       - run: bash scripts/build.sh
+        if: steps.creds.outputs.ready == 'true'
       - name: Deploy the built plugin
+        if: steps.creds.outputs.ready == 'true'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
           generate-zip: false
@@ -38,4 +73,5 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: fleetbase-for-woocommerce
           BUILD_DIR: build/fleetbase-for-woocommerce
-          VERSION: ${{ inputs.tag }}
+          # The SVN tag must be the bare version: readme.txt's "Stable tag" points at it.
+          VERSION: ${{ env.VERSION }}
