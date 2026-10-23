@@ -1,107 +1,93 @@
 === Fleetbase for WooCommerce ===
 Contributors: fleetbase
-Tags: logistics, delivery, shipping, tracking, fleet-management
-Requires at least: 5.8
-Tested up to: 6.4
-Requires PHP: 7.4
+Tags: delivery, local delivery, last mile, shipping, drivers
+Requires at least: 6.8
+Tested up to: 7.1
+Requires PHP: 8.1
 Stable tag: 1.0.0
-License: AGPL v3
-License URI: https://www.gnu.org/licenses/agpl-3.0.html
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Professional logistics and delivery management for WooCommerce. Automate deliveries, track orders in real-time, and scale your operations.
+Last-mile delivery for WooCommerce. Live delivery quotes at checkout, your own drivers and vehicles, and automatic order sync with Fleetbase.
 
 == Description ==
 
-Fleetbase for WooCommerce brings professional logistics and delivery management to your online store. Built on Fleetbase, the open-source logistics operating system, this plugin provides everything you need to manage deliveries efficiently.
+Fleetbase for WooCommerce connects your store to [Fleetbase](https://fleetbase.io), the open-source logistics platform, so you can run deliveries with your own drivers and no per-delivery fees.
 
-= Key Features =
+**At checkout**
 
-* **Frictionless Setup** - Get started in 60 seconds with automatic account creation
-* **200-Unit Free Trial** - Test with up to 100 orders, no credit card required
-* **Automatic Order Sync** - Orders automatically sent to Fleetbase when placed
-* **Real-Time Shipping Rates** - Display live delivery quotes at checkout
-* **Customer Tracking** - Provide real-time order tracking to your customers
-* **Webhook Integration** - Automatic order status updates
-* **Usage Dashboard** - Monitor your resource consumption and costs
-* **Open Source** - Complete transparency and customization
+* Live delivery prices from your Fleetbase service rates: flat, per distance, or tiered, limited to the areas you serve.
+* Customers choose "as soon as possible" or a day and time window within your delivery hours.
+* Works with the Cart and Checkout blocks and the classic checkout.
 
-= Why Choose Fleetbase? =
+**After the order**
 
-* **Transparent Pricing** - Usage-based pricing with no hidden fees
-* **Complete TMS** - Full transportation management system, not just labels
-* **Driver Apps** - Native iOS and Android apps for your delivery team
-* **Self-Hosting Option** - Deploy on your own infrastructure for unlimited usage
-* **Multi-Vendor Ready** - Built for marketplace scenarios
+* Paid orders become delivery jobs in Fleetbase automatically, with the customer, address, items, quote and delivery time. Cash-on-delivery amounts are passed along.
+* Drivers get the job in the free Fleetbase Navigator app for iOS and Android, with navigation and photo or signature proof of delivery.
+* Status comes back to WooCommerce: "Out for delivery" when the driver leaves, "Completed" when it is delivered, with proof-of-delivery links on the order.
+* Customers get a tracking link on the thank-you page, in their account and in emails, plus an "out for delivery" email.
 
-= Perfect For =
+**In WordPress admin**
 
-* Local delivery businesses
-* Food and beverage delivery
-* Grocery delivery
-* Courier services
-* Multi-vendor marketplaces
-* Any business with delivery operations
+* Deliveries page to assign drivers, dispatch, refresh and cancel.
+* Drivers, Vehicles and Service rates pages so day-to-day work does not need a second dashboard.
+* A dispatcher role for staff who run deliveries but should not change store settings.
+
+**Pricing**
+
+The plugin is free. Fleetbase Cloud is $29/month plus $5/month per driver and per vehicle, with orders unmetered. Fleetbase is open source and can also be self-hosted.
+
+== External services ==
+
+This plugin connects to the Fleetbase API at https://api.fleetbase.io using the API key you enter in the setup wizard. Nothing is sent before you connect.
+
+What is sent: for each order you choose to deliver, the pickup location, the customer's delivery address, name, email and phone number, item names, SKUs, quantities, prices, weights and dimensions, order totals, payment method, your chosen delivery time and the WooCommerce order number. At checkout, the customer's address is sent to obtain delivery quotes. During setup, your store address is sent for geocoding. Drivers, vehicles and service rates you manage in WordPress are created in your Fleetbase account.
+
+What is received: delivery status, driver name, tracking numbers and links, proof-of-delivery links, delivery quotes, and your drivers, vehicles and rates.
+
+Fleetbase terms of service: https://fleetbase.io/terms. Privacy policy: https://fleetbase.io/privacy.
+
+The plugin does not send any data to Fleetbase or anyone else about visitors who do not check out, and it does not phone home.
 
 == Installation ==
 
-1. Install and activate the plugin through the WordPress plugins screen
-2. Follow the setup wizard to create your Fleetbase account
-3. Your plugin will be automatically configured
-4. Start processing orders with automated logistics
+1. Install and activate the plugin. WooCommerce 9.5 or newer is required.
+2. Follow the setup wizard: connect your Fleetbase Cloud account with an API key, confirm your pickup location and add "Fleetbase Delivery" to a shipping zone.
+3. Create at least one service rate under Fleetbase → Service rates. Customers will now see a delivery price at checkout.
+4. Optional: add the webhook URL shown in the wizard to your Fleetbase console for instant status updates. Without it the plugin checks every few minutes.
 
 == Frequently Asked Questions ==
 
 = Do I need a Fleetbase account? =
 
-Yes, but the plugin creates one for you automatically during setup. No manual registration required.
+Yes. Create a free trial at https://console.fleetbase.io/onboard.
 
-= Is there a free trial? =
+= Can I connect to my own Fleetbase instance? =
 
-Yes! You get 200 resource units (100 orders) completely free to test the system. No credit card required.
+Self-hosted Fleetbase is supported through the Fleetbase Self-Hosted Connector add-on, available from fleetbase.io.
 
-= What happens after the trial? =
+= Does it work with the block checkout? =
 
-You can upgrade to a paid Fleetbase Cloud plan starting at $200/month, or deploy a self-hosted instance for unlimited usage.
+Yes, both the Cart and Checkout blocks and the classic shortcode checkout are supported. High-Performance Order Storage and the Fulfillments feature are supported.
 
-= Can I use my own Fleetbase server? =
+= Which orders are sent to Fleetbase? =
 
-Yes! The plugin supports both Fleetbase Cloud and self-hosted instances.
+By default, orders that used the Fleetbase Delivery shipping method and reached the Processing or Completed status. You can change the trigger statuses or send every physical order in Settings.
 
-= How are shipping rates calculated? =
+= What happens if Fleetbase is down? =
 
-Rates are calculated in real-time based on your configured service rates in Fleetbase, taking into account distance, weight, and other factors.
-
-= Can customers track their orders? =
-
-Yes! Customers get a tracking link and can view real-time delivery status on a branded tracking page.
+Checkout keeps working: hide the delivery method or offer a flat fallback rate, your choice. Orders queue and sync with retries once Fleetbase is reachable.
 
 == Screenshots ==
 
-1. Frictionless onboarding wizard
-2. Resource usage dashboard
-3. Real-time shipping rates at checkout
-4. Customer tracking page
-5. Order sync confirmation
+1. Live delivery quotes and the delivery-time picker in the Checkout block.
+2. The Fleetbase dashboard in WordPress admin.
+3. Deliveries page with assign and dispatch actions.
+4. Service rates editor.
+5. Order screen with the Fleetbase delivery box and sync log.
+6. Customer tracking page.
 
 == Changelog ==
 
 = 1.0.0 =
-* Initial release
-* Frictionless onboarding with automatic account provisioning
-* Automatic order synchronization
-* Real-time shipping rate calculation
-* Customer tracking page
-* Webhook integration for status updates
-* Resource usage dashboard
-* Support for both Cloud and self-hosted instances
-
-== Upgrade Notice ==
-
-= 1.0.0 =
-Initial release of Fleetbase for WooCommerce.
-
-== Support ==
-
-* Documentation: https://docs.fleetbase.io
-* Community: https://github.com/fleetbase/fleetbase-woocommerce/discussions
-* Issues: https://github.com/fleetbase/fleetbase-woocommerce/issues
+* Initial release.

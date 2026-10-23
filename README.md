@@ -1,179 +1,88 @@
 # Fleetbase for WooCommerce
 
-![Fleetbase Logo](https://fleetbase.io/images/fleetbase-logo.png)
+Last-mile delivery for WooCommerce stores, powered by [Fleetbase](https://fleetbase.io), the open-source logistics platform. Live delivery quotes at checkout, your own drivers and vehicles, automatic order sync, and status back to WooCommerce. No per-delivery fees.
 
-Official Fleetbase integration for WooCommerce - Open source logistics management for your online store.
+[![CI](https://github.com/fleetbase/woocommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/fleetbase/woocommerce/actions/workflows/ci.yml)
+[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 
-## Description
+## What it does
 
-Fleetbase for WooCommerce brings professional logistics and delivery management to your WooCommerce store. Automate order fulfillment, provide real-time tracking to customers, and scale your delivery operations with the power of Fleetbase, the open-source logistics operating system.
+**At checkout**
+- A "Fleetbase Delivery" shipping method that quotes live prices from your Fleetbase service rates (flat, per distance or tiered), limited to the service areas you define.
+- A delivery-time control: as soon as possible, or a day and time window within your delivery hours, lead time and booking horizon.
+- Works with the Cart and Checkout blocks and the classic shortcode checkout. A configurable "we don't deliver there yet" message for addresses outside your area.
 
-### Key Features
+**After the order**
+- Paid orders become Fleetbase orders automatically: pickup, geocoded dropoff, customer contact, line items with weights and dimensions, the checkout quote, the delivery window and cash-on-delivery amounts. Sync runs in the background with retries and never creates duplicates.
+- Drivers receive the job in the free [Fleetbase Navigator](https://fleetbase.io/platform/navigator) app with turn-by-turn navigation and photo or signature proof of delivery.
+- Status flows back through a webhook receiver and a polling fallback: "Out for delivery" when the driver leaves, "Completed" on delivery, with proof-of-delivery links, order notes and WooCommerce Fulfillments support.
+- Customers get a tracking link on the thank-you page, in their account and in emails, an "out for delivery" email, and a tracking page via the `[fleetbase_tracking]` shortcode or block.
 
-- **Frictionless Onboarding**: Get started in 60 seconds with automatic Fleetbase Cloud account provisioning
-- **200-Unit Free Trial**: Test with up to 100 orders at no cost, no credit card required
-- **Automatic Order Sync**: Orders are automatically sent to Fleetbase when placed
-- **Real-Time Shipping Rates**: Display live delivery quotes at checkout
-- **Customer Tracking**: Provide customers with real-time order tracking
-- **Webhook Integration**: Automatic order status updates from Fleetbase to WooCommerce
-- **Resource Usage Dashboard**: Monitor your usage and costs in real-time
-- **Flexible Deployment**: Use Fleetbase Cloud or self-host for unlimited usage
-
-### Why Fleetbase?
-
-- **Open Source**: Complete transparency and customization
-- **Usage-Based Pricing**: Pay only for what you use, no hidden fees
-- **Complete TMS**: Full transportation management system, not just shipping labels
-- **Driver Apps**: Native iOS and Android apps for your delivery team
-- **Multi-Vendor Ready**: Built for marketplace scenarios from the ground up
-
-## Installation
-
-### From WordPress.org (Recommended)
-
-1. In your WordPress admin, go to **Plugins > Add New**
-2. Search for "Fleetbase for WooCommerce"
-3. Click **Install Now** and then **Activate**
-4. Follow the setup wizard to create your Fleetbase account
-
-### Manual Installation
-
-1. Download the latest release from [GitHub Releases](https://github.com/fleetbase/fleetbase-woocommerce/releases)
-2. Upload the `fleetbase-woocommerce` folder to `/wp-content/plugins/`
-3. Activate the plugin through the **Plugins** menu in WordPress
-4. Follow the setup wizard to create your Fleetbase account
+**In WordPress admin**
+- Deliveries, Drivers, Vehicles and Service rates pages, so day-to-day work does not need a second dashboard.
+- A dispatcher role for staff who run deliveries without store-wide permissions.
+- A setup wizard, a dashboard with connection health, and a per-order delivery box with a sync log.
 
 ## Requirements
 
-- WordPress 5.8 or higher
-- WooCommerce 6.0 or higher
-- PHP 7.4 or higher
-- HTTPS enabled (recommended for security)
+- WordPress 6.8 or newer, WooCommerce 9.5 or newer, PHP 8.1 or newer.
+- A [Fleetbase Cloud](https://console.fleetbase.io/onboard) account. The plugin is free; Fleetbase Cloud bills per driver and vehicle, never per order.
+- Self-hosted Fleetbase instances are supported through the separate Fleetbase Self-Hosted Connector add-on.
 
-## Quick Start
+## Installation
 
-1. **Install and Activate** the plugin
-2. **Complete the Setup Wizard**:
-   - Enter your email and create a password
-   - Your Fleetbase account will be created automatically
-   - The plugin will configure itself with your API credentials
-3. **Start Selling**: Orders will automatically sync to Fleetbase
-4. **Monitor Usage**: View your resource consumption in the Fleetbase dashboard
+1. Download `fleetbase-for-woocommerce.zip` from the [latest release](https://github.com/fleetbase/woocommerce/releases) and install it under Plugins → Add New → Upload, or install it from the WordPress plugin directory once listed.
+2. Activate it and follow the setup wizard: connect with a Fleetbase API key, confirm the pickup location and add "Fleetbase Delivery" to a shipping zone.
+3. Create at least one service rate under Fleetbase → Service rates. Customers now see a delivery price at checkout.
+4. Optional: paste the webhook URL from the wizard into your Fleetbase console for instant status updates.
 
-## Configuration
+A 15-minute walkthrough of every feature is in [docs/acceptance.md](docs/acceptance.md).
 
-### Settings
+## Data sent to Fleetbase
 
-Access plugin settings at **Fleetbase > Settings** in your WordPress admin.
+Nothing is sent before you connect. Afterwards the plugin sends what a delivery needs: addresses, the customer's name, email and phone, item details and totals, the chosen delivery time, and the drivers, vehicles and rates you manage in WordPress. It receives delivery status, driver names, tracking and proof-of-delivery links. See the "External services" section of [readme.txt](readme.txt).
 
-- **API Configuration**: View your API connection status
-- **Auto-Sync Orders**: Enable/disable automatic order synchronization
-- **Tracking Page**: Enable customer-facing order tracking
+## Development
 
-### Shipping Zones
+```bash
+composer install
+pnpm install
+pnpm build          # or `pnpm start` for a watch build
+```
 
-1. Go to **WooCommerce > Settings > Shipping**
-2. Select a shipping zone
-3. Click **Add shipping method**
-4. Select **Fleetbase** from the dropdown
-5. Configure the method title and enable it
+Quality gates, all of which run in CI:
 
-## Usage
+```bash
+composer lint       # phpcs, WooCommerce-Core ruleset
+composer analyse    # PHPStan level 6 (also with phpstan-php81.neon)
+composer test       # PHPUnit, no WordPress runtime needed
+pnpm lint:js
+pnpm test:e2e       # Playwright + axe against a running store, see docs/dev-setup.md
+scripts/build.sh    # produces build/fleetbase-for-woocommerce.zip
+```
 
-### Viewing Synced Orders
+[docs/dev-setup.md](docs/dev-setup.md) describes the Docker sandbox, the seed scripts, the test matrix and the gotchas we hit along the way.
 
-Synced orders will have a Fleetbase tracking number added to the order notes. You can view the full order details in your [Fleetbase Console](https://console.fleetbase.io).
+### Architecture in one paragraph
 
-### Customer Tracking
+`src/Api` is a dependency-free client over `wp_remote_request` with retries and typed exceptions. `src/Shipping` holds the shipping method and a cached quote service. `src/Checkout` holds scheduling, the forced inner block for the Checkout block and the classic checkout fields. `src/Sync` holds the order mapper, the Action Scheduler syncer, the reconciler, the webhook receiver and the poller. `src/Admin` holds settings, the REST proxies (the API key never reaches the browser) and the React admin app in `assets/src/admin`. Hooks for developers are prefixed `fleetbase_wc_`.
 
-Customers can track their orders by:
-1. Using the tracking link in their order confirmation email
-2. Visiting your tracking page (add the `[fleetbase_tracking_page]` shortcode to any page)
+## Releasing
 
-### Monitoring Usage
+Releases follow the same convention as the other Fleetbase repositories: a `release/v<version>` branch merged into `main` becomes the tag, the GitHub Release and the WordPress.org update, with nothing typed by hand.
 
-View your resource usage at **Fleetbase > Dashboard**:
-- Current trial status
-- Resource unit consumption
-- Plan recommendations based on your usage
+1. Branch from `main` as `release/v1.x.y`.
+2. Set the version in `fleetbase-for-woocommerce.php` (`Version:`), `readme.txt` (`Stable tag:`) and `package.json`, add the `## [1.x.y]` section to `CHANGELOG.md`, and write `RELEASE.md` with the version on its first line.
+3. Open a pull request to `main` and merge it. The Release Tag workflow checks that every version source agrees with the branch name and pushes the `v1.x.y` tag. The Release workflow then builds the zip, publishes the GitHub Release from `RELEASE.md`, and deploys that tag to WordPress.org (once the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist).
 
-## Pricing
-
-### Free Trial
-
-- **200 resource units** (equivalent to 100 orders)
-- **All features included**
-- **No credit card required**
-
-### Fleetbase Cloud Plans
-
-After your trial, choose a plan based on your usage:
-
-- **Starter**: $200/month - 300 units
-- **Scale**: $400/month - 1,200 units
-- **Pro**: $600/month - 2,400 units
-- **Elite**: $800/month - 3,600 units
-- **Enterprise**: $1,000/month - 5,000 units
-- **Enterprise Plus**: $1,500/month - 7,500 units
-
-[View detailed pricing](https://fleetbase.io/pricing)
-
-### Self-Hosted Option
-
-For high-volume merchants, deploy Fleetbase on your own infrastructure for unlimited usage. [Learn more about self-hosting](https://github.com/fleetbase/fleetbase).
+If validation fails after the merge, fix `main` and run the Release Tag workflow by hand with the version.
 
 ## Support
 
-- **Documentation**: [docs.fleetbase.io](https://docs.fleetbase.io)
-- **Community Support**: [GitHub Discussions](https://github.com/fleetbase/fleetbase-woocommerce/discussions)
-- **Bug Reports**: [GitHub Issues](https://github.com/fleetbase/fleetbase-woocommerce/issues)
-- **Email Support**: Available for paid Fleetbase Cloud plans
-
-## Contributing
-
-We welcome contributions from the community! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/fleetbase/fleetbase-woocommerce.git
-
-# Install in your WordPress plugins directory
-ln -s /path/to/fleetbase-woocommerce /path/to/wordpress/wp-content/plugins/
-
-# Activate the plugin in WordPress
-```
+- Issues and feature requests: [GitHub issues](https://github.com/fleetbase/woocommerce/issues)
+- Fleetbase documentation: [fleetbase.io/docs](https://fleetbase.io/docs)
+- Community: [Fleetbase Discord](https://discord.gg/fleetbase)
 
 ## License
 
-This plugin is licensed under the GNU Affero General Public License v3.0.
-
-```
-Fleetbase for WooCommerce
-Copyright (C) 2026 Fleetbase Pte. Ltd.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-```
-
-## Credits
-
-Developed and maintained by [Fleetbase](https://fleetbase.io).
-
-## Links
-
-- [Fleetbase Website](https://fleetbase.io)
-- [Fleetbase GitHub](https://github.com/fleetbase/fleetbase)
-- [Documentation](https://docs.fleetbase.io)
-- [Console](https://console.fleetbase.io)
+GPLv3 or later. See [LICENSE](LICENSE).

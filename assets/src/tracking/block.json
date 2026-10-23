@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fleetbase/tracking",
+	"version": "1.0.0",
+	"title": "Delivery tracking",
+	"description": "A tracking-number lookup showing the status of a Fleetbase delivery.",
+	"category": "woocommerce",
+	"icon": "location",
+	"attributes": {
+		"number": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "align": [ "wide", "full" ] },
+	"textdomain": "fleetbase-for-woocommerce"
+}
