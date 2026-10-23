@@ -1,5 +1,8 @@
 name: Release
 
+# Runs on every v* tag (pushed by release-tag.yml when a release/v* branch merges, or by
+# hand). Builds the distributable, publishes the GitHub Release with RELEASE.md as its
+# body and the zip attached, then deploys that tag to WordPress.org.
 on:
   push:
     tags:
@@ -10,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    name: Build and attach the plugin zip
+    name: Build and publish the GitHub Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +28,7 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-      - name: Check the tag matches the plugin version
+      - name: Check the tag matches the plugin version and stable tag
         run: |
           TAG="${GITHUB_REF_NAME#v}"
           HEADER=$(grep -m1 "^ \* Version:" fleetbase-for-woocommerce.php | awk '{print $3}')
@@ -36,5 +39,17 @@ jobs:
       - run: bash scripts/build.sh
       - uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
+          body_path: RELEASE.md
           files: build/fleetbase-for-woocommerce.zip
           generate_release_notes: true
+
+  # Called directly rather than through `on: release`, because a Release published with
+  # GITHUB_TOKEN never triggers other workflows.
+  deploy-wporg:
+    name: Deploy to WordPress.org
+    needs: build
+    uses: ./.github/workflows/deploy-wporg.yml
+    with:
+      tag: ${{ github.ref_name }}
+    secrets: inherit

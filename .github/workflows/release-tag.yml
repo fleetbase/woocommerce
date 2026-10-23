@@ -1,0 +1,71 @@
+name: Release Tag
+
+# Tags a release when a `release/v<semver>` branch is merged to main, and pushes the tag.
+# Same convention as fleetops and the other Fleetbase repositories: the version is read
+# from the branch name, never retyped, and the tag is refused unless the version sources
+# below already agree with it. Delegates to the reusable workflow in fleetbase/fleetbase,
+# which needs the org secret _GITHUB_AUTH_TOKEN (inherited) and no-ops with a warning
+# until that secret is available to this repository.
+#
+# The tag is all this pushes. release.yml runs on `push: tags: v*`: it builds the zip,
+# publishes the GitHub Release from RELEASE.md and then deploys to WordPress.org.
+#
+# Version sources for this plugin:
+#   package.json                     checked by the reusable workflow (JSON .version)
+#   fleetbase-for-woocommerce.php    " * Version: x.y.z" header, checked here
+#   readme.txt                       "Stable tag: x.y.z", checked here
+#   CHANGELOG.md                     must have a "## [x.y.z]" section, checked here
+#   RELEASE.md                       first line must name vx.y.z, checked by the reusable workflow
+#
+# workflow_dispatch is the recovery path, for when a release failed validation and the
+# fix landed on main after the merge.
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to tag, e.g. 1.0.1. Recovery only — a normal release reads it from the branch."
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  plugin-version:
+    name: Check the plugin header, stable tag and changelog
+    if: github.event_name == 'workflow_dispatch' ||
+        (github.event.pull_request.merged == true &&
+         startsWith(github.event.pull_request.head.ref, 'release/v'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || 'main' }}
+      - run: |
+          set -uo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${{ github.event.pull_request.head.ref }}"
+            VERSION="${VERSION#release/}"
+          fi
+          VERSION="${VERSION#v}"
+          HEADER=$(grep -m1 "^ \* Version:" fleetbase-for-woocommerce.php | awk '{print $3}')
+          STABLE=$(grep -m1 "^Stable tag:" readme.txt | awk '{print $3}')
+          FAILED=0
+          [[ "$HEADER" == "$VERSION" ]] || { echo "::error::fleetbase-for-woocommerce.php says Version: $HEADER, but the release is $VERSION."; FAILED=1; }
+          [[ "$STABLE" == "$VERSION" ]] || { echo "::error::readme.txt says Stable tag: $STABLE, but the release is $VERSION."; FAILED=1; }
+          grep -q "^## \[$VERSION\]" CHANGELOG.md || { echo "::error::CHANGELOG.md has no '## [$VERSION]' section."; FAILED=1; }
+          grep -q "^## \[$VERSION\].*unreleased" CHANGELOG.md && { echo "::error::CHANGELOG.md still marks $VERSION as unreleased."; FAILED=1; }
+          exit $FAILED
+
+  tag:
+    needs: plugin-version
+    uses: fleetbase/fleetbase/.github/workflows/release-tag.yml@main
+    with:
+      version-files: package.json
+      version: ${{ github.event.inputs.version || '' }}
+    secrets: inherit

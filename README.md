@@ -69,9 +69,13 @@ scripts/build.sh    # produces build/fleetbase-for-woocommerce.zip
 
 ## Releasing
 
-1. Bump the version in `fleetbase-for-woocommerce.php`, `readme.txt` and `CHANGELOG.md`.
-2. Tag it: `git tag v1.x.y && git push origin v1.x.y`. The release workflow builds the zip and attaches it to a GitHub release.
-3. The WordPress.org deployment runs from the manual "Deploy to WordPress.org" workflow with that tag.
+Releases follow the same convention as the other Fleetbase repositories: a `release/v<version>` branch merged into `main` becomes the tag, the GitHub Release and the WordPress.org update, with nothing typed by hand.
+
+1. Branch from `main` as `release/v1.x.y`.
+2. Set the version in `fleetbase-for-woocommerce.php` (`Version:`), `readme.txt` (`Stable tag:`) and `package.json`, add the `## [1.x.y]` section to `CHANGELOG.md`, and write `RELEASE.md` with the version on its first line.
+3. Open a pull request to `main` and merge it. The Release Tag workflow checks that every version source agrees with the branch name and pushes the `v1.x.y` tag. The Release workflow then builds the zip, publishes the GitHub Release from `RELEASE.md`, and deploys that tag to WordPress.org (once the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist).
+
+If validation fails after the merge, fix `main` and run the Release Tag workflow by hand with the version.
 
 ## Support
 

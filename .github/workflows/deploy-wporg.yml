@@ -1,12 +1,16 @@
 name: Deploy to WordPress.org
 
-# Runs when a GitHub Release is published (the Release workflow publishes one for every v* tag)
-# and on demand for a given tag. It commits the built plugin to the WordPress.org SVN
-# repository, which is how installed sites receive the update. Needs the SVN_USERNAME and
-# SVN_PASSWORD secrets; until they exist the job logs a notice and does nothing.
+# Called by release.yml after every GitHub Release, and runnable on demand for a given tag.
+# It commits the built plugin to the WordPress.org SVN repository, which is how installed
+# sites receive the update. Needs the SVN_USERNAME and SVN_PASSWORD secrets; until they
+# exist the job logs a notice and does nothing.
 on:
-  release:
-    types: [ published ]
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Git tag to deploy, for example v1.0.0'
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       tag:
@@ -18,7 +22,7 @@ jobs:
     name: Build and commit to the plugin SVN
     runs-on: ubuntu-latest
     env:
-      TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      TAG: ${{ inputs.tag }}
     steps:
       - name: Check the SVN credentials exist
         id: creds
