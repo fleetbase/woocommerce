@@ -1,7 +1,8 @@
 <?php
 /**
- * Receives Fleetbase webhooks. The random token in the URL is the authentication;
- * the body is treated as a hint and the order is re-fetched from the API.
+ * Receives Fleetbase webhooks. The random token in the URL is the authentication; when
+ * this store registered its own endpoint, Fleetbase's X-Fleetbase-Signature must also
+ * verify. The body is treated as a hint and the order is re-fetched from the API.
  *
  * @package Fleetbase\WooCommerce
  */
@@ -63,6 +64,12 @@ final class WebhookController implements Hookable {
 	public function receive( \WP_REST_Request $request ) {
 		if ( ! $this->authorized( $request ) ) {
 			return new \WP_Error( 'not_found', 'Not found', [ 'status' => 404 ] );
+		}
+
+		$secret = Plugin::instance()->get( WebhookRegistrar::class )->secret();
+		if ( '' !== $secret && ! WebhookSignature::verify( (string) $request->get_header( 'x_fleetbase_signature' ), (string) $request->get_body(), $secret ) ) {
+			Plugin::instance()->logger()->warning( 'Webhook rejected: missing or invalid X-Fleetbase-Signature' );
+			return new \WP_Error( 'invalid_signature', 'Invalid signature', [ 'status' => 401 ] );
 		}
 
 		$body  = $request->get_json_params();

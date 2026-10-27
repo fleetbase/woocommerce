@@ -22,8 +22,9 @@ export default function Dashboard() {
 					{ state.connection.connected && (
 						<WebhookCard
 							webhookUrl={ state.webhookUrl }
-							onRotate={ ( webhookUrl ) =>
-								setState( { ...state, webhookUrl } )
+							status={ state.webhook }
+							onChange={ ( patch ) =>
+								setState( { ...state, ...patch } )
 							}
 							compact
 						/>

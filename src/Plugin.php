@@ -64,6 +64,8 @@ final class Plugin {
 			Sync\OrderSyncer::class,
 			Sync\Reconciler::class,
 			Sync\WebhookController::class,
+			Sync\WebhookRegistrar::class,
+			\Fleetbase\WooCommerce\Connection\OAuth\OAuthFlow::class,
 			Sync\Poller::class,
 			Orders\Statuses::class,
 			Orders\OrderActions::class,

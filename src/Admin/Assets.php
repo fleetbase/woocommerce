@@ -80,6 +80,11 @@ final class Assets implements Hookable {
 			'wizardCompleted'          => (bool) get_option( 'fleetbase_wc_wizard_completed' ),
 			'shippingMethodConfigured' => StoreInfo::fleetbase_shipping_method_configured(),
 			'webhookLast'              => \Fleetbase\WooCommerce\Sync\WebhookController::last(),
+			'webhook'                  => $plugin->get( \Fleetbase\WooCommerce\Sync\WebhookRegistrar::class )->status(),
+			'oauth'                    => [
+				'startUrl' => \Fleetbase\WooCommerce\Connection\OAuth\OAuthFlow::start_url(),
+				'error'    => \Fleetbase\WooCommerce\Connection\OAuth\OAuthFlow::take_error(),
+			],
 			'pollLast'                 => get_option( \Fleetbase\WooCommerce\Sync\Poller::OPTION_LAST, null ),
 			'settings'                 => $plugin->settings()->all(),
 			'capabilities'             => [
