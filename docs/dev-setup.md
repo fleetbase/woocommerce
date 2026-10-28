@@ -30,7 +30,7 @@ docker compose run --rm wpcli plugin list
 | What | Where |
 |---|---|
 | Store | http://localhost:8800 |
-| Admin | http://localhost:8800/wp-admin (user `fbwc-admin`; password is set by `scripts/seed-store.sh`, see `FBWC_DEV_PASS`) |
+| Admin | http://localhost:8800/wp-admin (user and generated password in `.sandbox.env`, written by `scripts/seed-store.sh`; set `FBWC_DEV_USER` / `FBWC_DEV_PASS` to choose your own) |
 | Plugin pages | Fleetbase menu: Dashboard, Setup, Settings |
 | Fleetbase API from your Mac | http://localhost:8000 |
 | Fleetbase API from inside the WP container | http://host.docker.internal:8000 (the wizard prefills this) |
@@ -136,6 +136,30 @@ Drive a delivery from the API: `PUT /v1/orders/{id}` with `{"driver":"driver_…
 once per event, the out-for-delivery email fires (the sandbox has no mail relay, so wp-cli prints a sendmail
 error), and `/track-delivery/?tracking=…` shows the public timeline.
 
+### Connect with Fleetbase (OAuth)
+
+Needs core-api 1.6.74 with fleetbase/core-api#327: dynamic client registration (`POST /oauth/register`) and the `api-key:create` scope. The flow, in `src/Connection/OAuth/`:
+
+1. The Connect button opens `admin-post.php?action=fleetbase_wc_oauth&step=start` (nonce, `manage_woocommerce`).
+2. WordPress registers the store at `{host}/oauth/register` with `software_id=fleetbase-woocommerce` and the redirect `{admin_url}admin-post.php?action=fleetbase_wc_oauth`. Registration is idempotent, so it runs on every start.
+3. A PKCE verifier and state are kept in a transient for ten minutes, and the browser goes to discovery's `authorization_endpoint` with `organization:read api-key:create` and `prompt=consent`.
+4. The callback exchanges the code, calls `POST {host}/oauth/v1/api-key`, checks the key with `organizations/current`, and saves it through `ConnectionStore::save()`. The tokens are dropped and never revoked, because revoking the grant expires the key.
+
+Server-side calls always use the connection host. Only the authorization endpoint comes from discovery, because the browser opens it. Locally that matters: WordPress reaches the API as `host.docker.internal:8000`, while discovery (and the browser) say `localhost:8000`.
+
+Locally:
+
+- Pick "Custom host (development)" with host `http://host.docker.internal:8000`, then Connect with Fleetbase.
+- The consent screen is the local console at http://localhost:4200. Sign in there as an administrator of "Woo Test Store".
+- The store registers as "Fleetbase for WooCommerce (localhost)" and appears under Account → Connected apps; its key appears under Developers → API Keys.
+- Failures come back as `?fleetbase_oauth=<reason>` on the setup page, with detail in the plugin log (source `fleetbase`).
+
+### Automatic webhook registration
+
+After any connect (OAuth or pasted key), `Sync\WebhookRegistrar` registers the store's webhook URL with `POST /v1/webhook-endpoints` for the order events in `Sync\WebhookRegistration::EVENTS`, and stores the endpoint id and its signing secret encrypted (option `fleetbase_wc_webhook_endpoint`). While that secret is stored, the receiver requires a valid `X-Fleetbase-Signature` (5 minute tolerance) as well as the URL token. Generating a new webhook URL updates the endpoint; disconnecting deletes it.
+
+Fleetbase refuses webhook URLs it considers private, including `localhost` and `*.internal`, so in the Docker sandbox registration always falls back: the webhook card shows the reason and the manual steps, and the poller keeps orders in step. To exercise the automatic path locally, expose the store through a public tunnel and set WordPress's site URL to it.
+
 ### Fleet pages and roles
 
 Deliveries, Drivers and Vehicles need the `manage_fleetbase_deliveries` capability (granted to administrators,
@@ -146,7 +170,7 @@ Fleetbase returns raw SQL in some error bodies; the proxies pass messages throug
 ### End-to-end and accessibility tests
 
 ```bash
-pnpm test:e2e            # Playwright against the sandbox; FBWC_BASE_URL, FBWC_DEV_USER, FBWC_DEV_PASS override defaults
+pnpm test:e2e            # Playwright against the sandbox; signs in with .sandbox.env, or FBWC_DEV_USER / FBWC_DEV_PASS
 pnpm test:e2e:headed     # watch it run
 ```
 

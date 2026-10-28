@@ -63,6 +63,12 @@ final class ConnectionStore {
 	 * @param array<string, mixed> $organization
 	 */
 	public function save( string $provider, string $host, string $key, array $organization ): void {
+		$previous = $this->connection();
+		if ( null !== $previous && ( $previous->host() !== Connection::normalize_host( $host ) || $previous->key() !== trim( $key ) ) ) {
+			/** Fires while the outgoing connection still works, so it can be cleaned up. */
+			do_action( 'fleetbase_wc_before_disconnect' );
+		}
+
 		$this->cache = [
 			'provider'         => $provider,
 			'host'             => Connection::normalize_host( $host ),
@@ -84,6 +90,10 @@ final class ConnectionStore {
 	}
 
 	public function disconnect(): void {
+		if ( $this->is_connected() ) {
+			/** Fires while the connection still works, so it can be cleaned up. */
+			do_action( 'fleetbase_wc_before_disconnect' );
+		}
 		delete_option( self::OPTION );
 		$this->cache = null;
 

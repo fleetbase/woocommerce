@@ -58,8 +58,17 @@ wp config set WP_DEBUG_LOG true --raw --type=constant >/dev/null
 wp config set WP_DEBUG_DISPLAY false --raw --type=constant >/dev/null
 
 echo "==> Dev admin user (sandbox only)"
+# The password is generated once and kept in .sandbox.env (gitignored), which the
+# end-to-end tests read. Set FBWC_DEV_USER / FBWC_DEV_PASS to choose your own.
+ENV_FILE="${HERE}/../.sandbox.env"
+if [ -z "${FBWC_DEV_PASS:-}" ] && [ -f "${ENV_FILE}" ]; then
+  # shellcheck disable=SC1090
+  . "${ENV_FILE}"
+fi
 DEV_USER="${FBWC_DEV_USER:-fbwc-admin}"
-DEV_PASS="${FBWC_DEV_PASS:-fbwc-sandbox-2026}"
+DEV_PASS="${FBWC_DEV_PASS:-$(LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 20)}"
+printf 'FBWC_DEV_USER=%s\nFBWC_DEV_PASS=%s\n' "${DEV_USER}" "${DEV_PASS}" > "${ENV_FILE}"
+chmod 600 "${ENV_FILE}"
 if wp user get "${DEV_USER}" --field=ID >/dev/null 2>&1; then
   wp user update "${DEV_USER}" --user_pass="${DEV_PASS}" --role=administrator >/dev/null && echo "updated ${DEV_USER}"
 else
@@ -69,3 +78,4 @@ fi
 echo "==> Activate plugin"
 wp plugin activate fleetbase-for-woocommerce >/dev/null && echo "activated"
 echo "Done. Open http://localhost:8800/wp-admin/admin.php?page=fleetbase-setup"
+echo "Sign in as ${DEV_USER}; the password is in .sandbox.env."

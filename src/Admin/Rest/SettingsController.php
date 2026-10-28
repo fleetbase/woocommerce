@@ -20,6 +20,7 @@ final class SettingsController extends RestController {
 		$this->route( '/wizard/complete', 'POST', [ $this, 'complete_wizard' ] );
 		$this->route( '/wizard/reset', 'POST', [ $this, 'reset_wizard' ] );
 		$this->route( '/webhook/rotate', 'POST', [ $this, 'rotate_webhook' ] );
+		$this->route( '/webhook/register', 'POST', [ $this, 'register_webhook' ] );
 	}
 
 	public function get_settings(): \WP_REST_Response {
@@ -44,8 +45,21 @@ final class SettingsController extends RestController {
 	}
 
 	public function rotate_webhook(): \WP_REST_Response {
-		$webhook = Plugin::instance()->get( WebhookUrl::class );
+		$webhook = Plugin::instance()->get( \Fleetbase\WooCommerce\Support\WebhookUrl::class );
 		$webhook->rotate();
-		return $this->respond( [ 'webhookUrl' => $webhook->url() ] );
+		$status = Plugin::instance()->get( \Fleetbase\WooCommerce\Sync\WebhookRegistrar::class )->sync();
+		return $this->respond(
+			[
+				'webhookUrl' => $webhook->url(),
+				'webhook'    => $status,
+			]
+		);
+	}
+
+	/**
+	 * Register the webhook URL with Fleetbase through the API key.
+	 */
+	public function register_webhook(): \WP_REST_Response {
+		return $this->respond( [ 'webhook' => Plugin::instance()->get( \Fleetbase\WooCommerce\Sync\WebhookRegistrar::class )->sync() ] );
 	}
 }

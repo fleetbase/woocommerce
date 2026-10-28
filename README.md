@@ -32,9 +32,11 @@ Last-mile delivery for WooCommerce stores, powered by [Fleetbase](https://fleetb
 ## Installation
 
 1. Download `fleetbase-for-woocommerce.zip` from the [latest release](https://github.com/fleetbase/woocommerce/releases) and install it under Plugins → Add New → Upload, or install it from the WordPress plugin directory once listed.
-2. Activate it and follow the setup wizard: connect with a Fleetbase API key, confirm the pickup location and add "Fleetbase Delivery" to a shipping zone.
-3. Create at least one service rate under Fleetbase → Service rates. Customers now see a delivery price at checkout.
-4. Optional: paste the webhook URL from the wizard into your Fleetbase console for instant status updates.
+2. Activate it and follow the setup wizard. Click **Connect with Fleetbase**, sign in, pick your organization and approve. Fleetbase creates an API key for the store, and the plugin registers its webhook for instant status updates, so there is nothing to copy. Pasting an API key yourself still works.
+3. Confirm the pickup location and add "Fleetbase Delivery" to a shipping zone.
+4. Create at least one service rate under Fleetbase → Service rates. Customers now see a delivery price at checkout.
+
+To disconnect a store from the Fleetbase side, remove it under Account → Connected apps in the Fleetbase console. Its API key stops working.
 
 A 15-minute walkthrough of every feature is in [docs/acceptance.md](docs/acceptance.md).
 

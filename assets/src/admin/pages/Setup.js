@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import {
 	Button,
 	Card,
@@ -20,7 +20,7 @@ const STEPS = [ 'mode', 'key', 'pickup', 'shipping', 'webhook' ];
 function Stepper( { current } ) {
 	const labels = {
 		mode: __( 'Account', 'fleetbase-for-woocommerce' ),
-		key: __( 'API key', 'fleetbase-for-woocommerce' ),
+		key: __( 'Connect', 'fleetbase-for-woocommerce' ),
 		pickup: __( 'Pickup location', 'fleetbase-for-woocommerce' ),
 		shipping: __( 'Checkout', 'fleetbase-for-woocommerce' ),
 		webhook: __( 'Status updates', 'fleetbase-for-woocommerce' ),
@@ -37,9 +37,52 @@ function Stepper( { current } ) {
 	);
 }
 
+/**
+ * The result of "Connect with Fleetbase", from the URL Fleetbase sent the merchant back to.
+ */
+const OAUTH_RESULT = new URLSearchParams( window.location.search ).get(
+	'fleetbase_oauth'
+);
+
+function oauthMessage( result, detail ) {
+	const messages = {
+		access_denied: __(
+			'You cancelled the connection in Fleetbase. Nothing was changed.',
+			'fleetbase-for-woocommerce'
+		),
+		state_mismatch: __(
+			'That connection attempt expired. Start again.',
+			'fleetbase-for-woocommerce'
+		),
+		unreachable: __(
+			'WordPress could not reach Fleetbase. Check the host and try again.',
+			'fleetbase-for-woocommerce'
+		),
+		not_supported: __(
+			'This Fleetbase server does not support connecting with OAuth yet. Paste an API key instead.',
+			'fleetbase-for-woocommerce'
+		),
+		no_permission: __(
+			'Only an administrator of the Fleetbase organization can connect a store.',
+			'fleetbase-for-woocommerce'
+		),
+		missing_scope: __(
+			'Fleetbase did not allow creating an API key for this store.',
+			'fleetbase-for-woocommerce'
+		),
+	};
+	const sentence =
+		messages[ result ] ||
+		__(
+			'Connecting with Fleetbase did not finish.',
+			'fleetbase-for-woocommerce'
+		);
+	return detail && ! messages[ result ] ? sentence + ' ' + detail : sentence;
+}
+
 function initialStep( data ) {
 	if ( ! data.connection.connected ) {
-		return 'mode';
+		return OAUTH_RESULT && OAUTH_RESULT !== 'connected' ? 'key' : 'mode';
 	}
 	return data.pickup ? 'shipping' : 'pickup';
 }
@@ -67,7 +110,34 @@ export default function Setup() {
 	const [ key, setKey ] = useState( '' );
 	const [ tested, setTested ] = useState( null );
 	const [ busy, setBusy ] = useState( false );
-	const [ error, setError ] = useState( null );
+	const [ error, setError ] = useState(
+		OAUTH_RESULT && OAUTH_RESULT !== 'connected'
+			? oauthMessage( OAUTH_RESULT, initial.oauth?.error )
+			: null
+	);
+	const [ justConnected ] = useState(
+		OAUTH_RESULT === 'connected' && initial.connection.connected
+	);
+	const [ pasteKey, setPasteKey ] = useState( false );
+	const canOAuth = !! providerDef?.oauth && !! state.oauth?.startUrl;
+
+	// Drop the result from the address bar so a reload doesn't repeat the message.
+	useEffect( () => {
+		if ( OAUTH_RESULT && window.history?.replaceState ) {
+			const url = new URL( window.location.href );
+			url.searchParams.delete( 'fleetbase_oauth' );
+			window.history.replaceState( null, '', url.toString() );
+		}
+	}, [] );
+
+	const oauthUrl = () => {
+		const url = new URL( state.oauth.startUrl, window.location.href );
+		url.searchParams.set( 'provider', provider );
+		if ( providerDef?.host_editable ) {
+			url.searchParams.set( 'host', host );
+		}
+		return url.toString();
+	};
 
 	const go = ( next ) => {
 		setError( null );
@@ -126,6 +196,18 @@ export default function Setup() {
 				connection={ state.connection }
 			/>
 			<Stepper current={ step } />
+			{ justConnected && step !== 'webhook' && (
+				<Notice status="success" isDismissible={ false }>
+					{ sprintf(
+						/* translators: %s: organisation name */
+						__(
+							'Connected to %s. Fleetbase created an API key for this store; you can see it under Developers → API Keys.',
+							'fleetbase-for-woocommerce'
+						),
+						state.connection.organization?.name || 'Fleetbase'
+					) }
+				</Notice>
+			) }
 			{ error && (
 				<Notice
 					status="error"
@@ -208,87 +290,159 @@ export default function Setup() {
 					<CardBody>
 						<h2>
 							{ __(
-								'Connect with an API key',
+								'Connect your store',
 								'fleetbase-for-woocommerce'
 							) }
 						</h2>
-						<p>
-							{ __(
-								'In the Fleetbase console open Developers → API Keys and create a key. Use a live key for real orders, or a test key to try things out safely.',
-								'fleetbase-for-woocommerce'
-							) }
-						</p>
-						{ providerDef?.host_editable && (
-							<TextControl
-								label={ __(
-									'API host',
-									'fleetbase-for-woocommerce'
-								) }
-								value={ host }
-								onChange={ setHost }
-								help={ __(
-									'For example https://api.yourcompany.com',
-									'fleetbase-for-woocommerce'
-								) }
-								__nextHasNoMarginBottom
-							/>
-						) }
-						<TextControl
-							label={ __(
-								'API key',
-								'fleetbase-for-woocommerce'
-							) }
-							value={ key }
-							onChange={ ( v ) => {
-								setKey( v );
-								setTested( null );
-							} }
-							placeholder="flb_live_…"
-							type="password"
-							__nextHasNoMarginBottom
-						/>
-						{ tested && (
-							<Notice status="success" isDismissible={ false }>
-								{ sprintf(
-									/* translators: 1: organisation name, 2: live or test */
-									__(
-										'Connected to %1$s (%2$s mode).',
+						{ canOAuth && (
+							<>
+								<p>
+									{ __(
+										'Sign in to Fleetbase and pick your organization. Fleetbase creates an API key for this store and the plugin registers for status updates, so there is nothing to copy.',
 										'fleetbase-for-woocommerce'
-									),
-									tested.organization?.name || '',
-									tested.mode
+									) }
+								</p>
+								{ providerDef?.host_editable && (
+									<TextControl
+										label={ __(
+											'API host',
+											'fleetbase-for-woocommerce'
+										) }
+										value={ host }
+										onChange={ setHost }
+										help={ __(
+											'For example https://api.yourcompany.com',
+											'fleetbase-for-woocommerce'
+										) }
+										__nextHasNoMarginBottom
+									/>
 								) }
-							</Notice>
+								<div className="fbwc-actions">
+									<Button
+										variant="secondary"
+										onClick={ () => go( 'mode' ) }
+									>
+										{ __(
+											'Back',
+											'fleetbase-for-woocommerce'
+										) }
+									</Button>
+									<Button
+										variant="primary"
+										href={ oauthUrl() }
+									>
+										{ __(
+											'Connect with Fleetbase',
+											'fleetbase-for-woocommerce'
+										) }
+									</Button>
+								</div>
+								<p>
+									<Button
+										variant="link"
+										onClick={ () =>
+											setPasteKey( ! pasteKey )
+										}
+										aria-expanded={ pasteKey }
+									>
+										{ __(
+											'Paste an API key instead',
+											'fleetbase-for-woocommerce'
+										) }
+									</Button>
+								</p>
+							</>
 						) }
-						<div className="fbwc-actions">
-							<Button
-								variant="secondary"
-								onClick={ () => go( 'mode' ) }
-							>
-								{ __( 'Back', 'fleetbase-for-woocommerce' ) }
-							</Button>
-							<Button
-								variant="secondary"
-								onClick={ test }
-								disabled={ busy || key.length < 10 }
-							>
-								{ busy && ! tested ? (
-									<Spinner />
-								) : (
-									__(
-										'Test connection',
+						{ ( ! canOAuth || pasteKey ) && (
+							<>
+								<p>
+									{ __(
+										'In the Fleetbase console open Developers → API Keys and create a key. Use a live key for real orders, or a test key to try things out safely.',
 										'fleetbase-for-woocommerce'
-									)
+									) }
+								</p>
+								{ providerDef?.host_editable && ! canOAuth && (
+									<TextControl
+										label={ __(
+											'API host',
+											'fleetbase-for-woocommerce'
+										) }
+										value={ host }
+										onChange={ setHost }
+										help={ __(
+											'For example https://api.yourcompany.com',
+											'fleetbase-for-woocommerce'
+										) }
+										__nextHasNoMarginBottom
+									/>
 								) }
-							</Button>
-							<Button
-								variant="primary"
-								onClick={ connect }
-								disabled={ busy || ! tested }
-							>
-								{ __( 'Connect', 'fleetbase-for-woocommerce' ) }
-							</Button>
-						</div>
+								<TextControl
+									label={ __(
+										'API key',
+										'fleetbase-for-woocommerce'
+									) }
+									value={ key }
+									onChange={ ( v ) => {
+										setKey( v );
+										setTested( null );
+									} }
+									placeholder="flb_live_…"
+									type="password"
+									__nextHasNoMarginBottom
+								/>
+								{ tested && (
+									<Notice
+										status="success"
+										isDismissible={ false }
+									>
+										{ sprintf(
+											/* translators: 1: organisation name, 2: live or test */
+											__(
+												'Connected to %1$s (%2$s mode).',
+												'fleetbase-for-woocommerce'
+											),
+											tested.organization?.name || '',
+											tested.mode
+										) }
+									</Notice>
+								) }
+								<div className="fbwc-actions">
+									<Button
+										variant="secondary"
+										onClick={ () => go( 'mode' ) }
+									>
+										{ __(
+											'Back',
+											'fleetbase-for-woocommerce'
+										) }
+									</Button>
+									<Button
+										variant="secondary"
+										onClick={ test }
+										disabled={ busy || key.length < 10 }
+									>
+										{ busy && ! tested ? (
+											<Spinner />
+										) : (
+											__(
+												'Test connection',
+												'fleetbase-for-woocommerce'
+											)
+										) }
+									</Button>
+									<Button
+										variant="primary"
+										onClick={ connect }
+										disabled={ busy || ! tested }
+									>
+										{ __(
+											'Connect',
+											'fleetbase-for-woocommerce'
+										) }
+									</Button>
+								</div>
+							</>
+						) }
 					</CardBody>
 				</Card>
 			) }
@@ -403,8 +557,9 @@ export default function Setup() {
 				<>
 					<WebhookCard
 						webhookUrl={ state.webhookUrl }
-						onRotate={ ( webhookUrl ) =>
-							setState( { ...state, webhookUrl } )
+						status={ state.webhook }
+						onChange={ ( patch ) =>
+							setState( { ...state, ...patch } )
 						}
 					/>
 					<Card className="fbwc-card">

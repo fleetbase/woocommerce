@@ -55,4 +55,8 @@ final class CustomHostProvider implements ConnectionProvider {
 	public function status(): array {
 		return [ 'development' => true ];
 	}
+
+	public function supports_oauth(): bool {
+		return true;
+	}
 }

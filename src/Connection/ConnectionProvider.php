@@ -45,4 +45,9 @@ interface ConnectionProvider {
 	 * @return array<string, mixed>
 	 */
 	public function status(): array;
+
+	/**
+	 * Whether "Connect with Fleetbase" (OAuth) can be offered for this connection type.
+	 */
+	public function supports_oauth(): bool;
 }

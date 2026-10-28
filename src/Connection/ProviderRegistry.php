@@ -60,6 +60,7 @@ final class ProviderRegistry {
 				'host_editable' => $provider->host_editable(),
 				'default_host'  => $provider->default_host(),
 				'status'        => $provider->status(),
+				'oauth'         => $provider->supports_oauth(),
 			];
 		}
 		return $out;

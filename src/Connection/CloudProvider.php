@@ -46,4 +46,8 @@ final class CloudProvider implements ConnectionProvider {
 	public function status(): array {
 		return [];
 	}
+
+	public function supports_oauth(): bool {
+		return true;
+	}
 }

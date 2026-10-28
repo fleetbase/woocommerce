@@ -39,7 +39,9 @@ The plugin is free. Fleetbase Cloud is $29/month plus $5/month per driver and pe
 
 == External services ==
 
-This plugin connects to the Fleetbase API at https://api.fleetbase.io using the API key you enter in the setup wizard. Nothing is sent before you connect.
+This plugin connects to the Fleetbase API at https://api.fleetbase.io using the API key you enter in the setup wizard, or the one Fleetbase creates when you choose "Connect with Fleetbase". Nothing is sent before you connect.
+
+When you choose "Connect with Fleetbase", your store's admin URL is sent to Fleetbase once to register the store as an app, and you are sent to Fleetbase to sign in and approve. After connecting, the plugin registers your store's webhook URL with Fleetbase so it can send status updates.
 
 What is sent: for each order you choose to deliver, the pickup location, the customer's delivery address, name, email and phone number, item names, SKUs, quantities, prices, weights and dimensions, order totals, payment method, your chosen delivery time and the WooCommerce order number. At checkout, the customer's address is sent to obtain delivery quotes. During setup, your store address is sent for geocoding. Drivers, vehicles and service rates you manage in WordPress are created in your Fleetbase account.
 
@@ -52,15 +54,20 @@ The plugin does not send any data to Fleetbase or anyone else about visitors who
 == Installation ==
 
 1. Install and activate the plugin. WooCommerce 9.5 or newer is required.
-2. Follow the setup wizard: connect your Fleetbase Cloud account with an API key, confirm your pickup location and add "Fleetbase Delivery" to a shipping zone.
+2. Follow the setup wizard: click "Connect with Fleetbase", sign in and approve, then confirm your pickup location and add "Fleetbase Delivery" to a shipping zone. You can paste an API key instead if you prefer.
 3. Create at least one service rate under Fleetbase → Service rates. Customers will now see a delivery price at checkout.
-4. Optional: add the webhook URL shown in the wizard to your Fleetbase console for instant status updates. Without it the plugin checks every few minutes.
+
+Status updates are set up automatically when you connect. If Fleetbase cannot reach your store's address, the wizard shows the webhook URL to add in your Fleetbase console, and the plugin checks for updates every few minutes in the meantime.
 
 == Frequently Asked Questions ==
 
 = Do I need a Fleetbase account? =
 
 Yes. Create a free trial at https://console.fleetbase.io/onboard.
+
+= What does "Connect with Fleetbase" do? =
+
+It signs you in to Fleetbase and asks you to approve this store for one of your organizations. Fleetbase then creates an API key named after your store (listed under Developers → API Keys), and the plugin uses that key exactly as if you had pasted it. Only an administrator of the organization can approve. Removing the store under Account → Connected apps in Fleetbase revokes the key.
 
 = Can I connect to my own Fleetbase instance? =
 

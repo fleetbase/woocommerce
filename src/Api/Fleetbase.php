@@ -21,6 +21,7 @@ use Fleetbase\WooCommerce\Api\Resources\ServiceQuotes;
 use Fleetbase\WooCommerce\Api\Resources\ServiceRates;
 use Fleetbase\WooCommerce\Api\Resources\TrackingStatuses;
 use Fleetbase\WooCommerce\Api\Resources\Vehicles;
+use Fleetbase\WooCommerce\Api\Resources\WebhookEndpoints;
 use Fleetbase\WooCommerce\Api\Resources\Zones;
 
 final class Fleetbase {
@@ -88,6 +89,10 @@ final class Fleetbase {
 
 	public function organizations(): Organizations {
 		return $this->resource( Organizations::class );
+	}
+
+	public function webhook_endpoints(): WebhookEndpoints {
+		return $this->resource( WebhookEndpoints::class );
 	}
 
 	/**
