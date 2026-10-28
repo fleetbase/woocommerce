@@ -134,6 +134,15 @@ export default function Deliveries() {
 				r.can_dispatch || ( ! r.driver && r.fleetbase_id ) ? (
 					<div className="fbwc-inline">
 						<SelectControl
+							label={ sprintf(
+								/* translators: %s: order number */
+								__(
+									'Driver for order #%s',
+									'fleetbase-for-woocommerce'
+								),
+								r.number
+							) }
+							hideLabelFromVision
 							value={ pending[ r.id ] ?? '' }
 							options={ [
 								{
