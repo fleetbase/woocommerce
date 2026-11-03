@@ -12,6 +12,7 @@ namespace Fleetbase\WooCommerce\Admin\Rest;
 use Fleetbase\WooCommerce\Admin\DeliveriesQuery;
 use Fleetbase\WooCommerce\Checkout\DeliveryChoice;
 use Fleetbase\WooCommerce\Plugin;
+use Fleetbase\WooCommerce\Support\Compat;
 use Fleetbase\WooCommerce\Sync\OrderSyncer;
 use Fleetbase\WooCommerce\Sync\Reconciler;
 use Fleetbase\WooCommerce\Sync\StatusMap;
@@ -29,7 +30,7 @@ final class DeliveriesController extends RestController {
 	}
 
 	public function index( \WP_REST_Request $request ): \WP_REST_Response {
-		$result = wc_get_orders( DeliveriesQuery::args( (array) $request->get_params() ) );
+		$result = wc_get_orders( Compat::order_query( DeliveriesQuery::args( (array) $request->get_params() ) ) );
 		$orders = is_object( $result ) && isset( $result->orders ) ? (array) $result->orders : (array) $result;
 		$total  = is_object( $result ) && isset( $result->total ) ? (int) $result->total : count( $orders );
 		$pages  = is_object( $result ) && isset( $result->max_num_pages ) ? (int) $result->max_num_pages : 1;

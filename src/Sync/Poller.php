@@ -13,6 +13,7 @@ namespace Fleetbase\WooCommerce\Sync;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Orders\Statuses;
 use Fleetbase\WooCommerce\Plugin;
+use Fleetbase\WooCommerce\Support\Compat;
 
 final class Poller implements Hookable {
 
@@ -74,18 +75,20 @@ final class Poller implements Hookable {
 			return 0;
 		}
 		$orders = wc_get_orders(
-			[
-				'limit'        => 50,
-				'type'         => 'shop_order',
-				'status'       => [ 'processing', 'on-hold', Statuses::OUT_FOR_DELIVERY ],
-				'date_created' => '>' . ( time() - 14 * DAY_IN_SECONDS ),
-				'meta_query'   => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-					[
-						'key'     => SyncState::META_ORDER_ID,
-						'compare' => 'EXISTS',
+			Compat::order_query(
+				[
+					'limit'        => 50,
+					'type'         => 'shop_order',
+					'status'       => [ 'processing', 'on-hold', Statuses::OUT_FOR_DELIVERY ],
+					'date_created' => '>' . ( time() - 14 * DAY_IN_SECONDS ),
+					'meta_query'   => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						[
+							'key'     => SyncState::META_ORDER_ID,
+							'compare' => 'EXISTS',
+						],
 					],
-				],
-			]
+				]
+			)
 		);
 
 		$reconciler = $plugin->get( Reconciler::class );
