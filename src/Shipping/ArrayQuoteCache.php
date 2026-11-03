@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Shipping;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ArrayQuoteCache implements QuoteCache {
 
 	/** @var array<string, array{expires:int, value:array<string, mixed>}> */

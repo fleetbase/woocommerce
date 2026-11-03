@@ -15,6 +15,8 @@ use Fleetbase\WooCommerce\Orders\Statuses;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Compat;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Poller implements Hookable {
 
 	public const HOOK  = 'fleetbase_wc_poll_orders';

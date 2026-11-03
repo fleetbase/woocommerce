@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 interface Hookable {
 	/**
 	 * Attach hooks. Called once during boot.

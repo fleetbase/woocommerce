@@ -51,6 +51,12 @@ Fleetbase terms of service: https://fleetbase.io/terms. Privacy policy: https://
 
 The plugin does not send any data to Fleetbase or anyone else about visitors who do not check out, and it does not phone home.
 
+== Source code ==
+
+The JavaScript and CSS in `assets/build` are compiled. The readable source is in `assets/src` in the plugin's public repository: https://github.com/fleetbase/woocommerce
+
+To build it yourself, install Node.js and pnpm, then run `pnpm install` and `pnpm build` in the repository.
+
 == Installation ==
 
 1. Install and activate the plugin. WooCommerce 9.5 or newer is required.

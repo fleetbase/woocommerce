@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ProviderRegistry {
 
 	/** @var array<string, ConnectionProvider>|null */
@@ -20,12 +22,9 @@ final class ProviderRegistry {
 	public function all(): array {
 		if ( null === $this->providers ) {
 			$providers = [ CloudProvider::ID => new CloudProvider() ];
-			if ( CustomHostProvider::enabled() ) {
-				$providers[ CustomHostProvider::ID ] = new CustomHostProvider();
-			}
 
 			/**
-			 * Register additional connection providers (the self-hosted connector add-on uses this).
+			 * Register additional connection providers.
 			 *
 			 * @param array<string, ConnectionProvider> $providers
 			 */

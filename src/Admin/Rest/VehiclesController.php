@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Admin\Rest;
 
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class VehiclesController extends RestController {
 
 	public const STATUSES = [ 'active', 'available', 'in_use', 'maintenance', 'out_of_service', 'inactive', 'decommissioned' ];

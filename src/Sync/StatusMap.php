@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Sync;
 
+defined( 'ABSPATH' ) || exit;
+
 final class StatusMap {
 
 	public const OUT_FOR_DELIVERY = 'out-for-delivery';

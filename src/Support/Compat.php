@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Support;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Compat implements Hookable {
 
 	private const LEGACY_META_QUERY = 'fleetbase_wc_meta_query';

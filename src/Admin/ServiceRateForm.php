@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Admin;
 
 use Fleetbase\WooCommerce\Api\Money;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ServiceRateForm {
 
 	public const METHODS = [ 'per_meter', 'fixed_rate', 'fixed_meter' ];

@@ -18,6 +18,8 @@ use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Pickup;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OrderSyncer implements Hookable {
 
 	public const HOOK_SYNC   = 'fleetbase_wc_sync_order';

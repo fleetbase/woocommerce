@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Checkout;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OrderDelivery implements Hookable {
 
 	public function register(): void {

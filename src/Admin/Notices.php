@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Admin;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Notices implements Hookable {
 
 	public function register(): void {

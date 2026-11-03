@@ -1,6 +1,7 @@
 <?php
 /**
- * A way of reaching a Fleetbase API: Cloud, or a self-hosted instance (via the companion add-on).
+ * A way of reaching a Fleetbase API. The plugin ships Fleetbase Cloud; others can be registered
+ * with the fleetbase_wc_connection_providers filter.
  *
  * @package Fleetbase\WooCommerce
  */
@@ -8,6 +9,8 @@
 declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Connection;
+
+defined( 'ABSPATH' ) || exit;
 
 interface ConnectionProvider {
 
@@ -32,7 +35,7 @@ interface ConnectionProvider {
 	public function validate_host( string $host );
 
 	/**
-	 * Additional checks after the API key has been verified (for example a license).
+	 * Additional checks the provider needs after the API key has been verified.
 	 *
 	 * @param array<string, mixed> $organization The organisation returned by the API.
 	 * @return true|\WP_Error
@@ -40,7 +43,7 @@ interface ConnectionProvider {
 	public function authorize( string $host, array $organization );
 
 	/**
-	 * Extra, non-secret data shown in the admin (for example a license status).
+	 * Extra, non-secret data about the connection, shown in the admin.
 	 *
 	 * @return array<string, mixed>
 	 */

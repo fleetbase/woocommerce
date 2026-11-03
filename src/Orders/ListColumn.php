@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Orders;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ListColumn implements Hookable {
 
 	public const COLUMN = 'fleetbase_delivery';

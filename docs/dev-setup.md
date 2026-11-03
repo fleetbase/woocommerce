@@ -37,7 +37,7 @@ docker compose run --rm wpcli plugin list
 | Fleetbase console | http://localhost:4200 |
 | Plugin log | WooCommerce → Status → Logs, source `fleetbase` |
 
-`scripts/seed-store.sh` defines `FLEETBASE_WC_ALLOW_CUSTOM_HOST` so the wizard offers the "Custom host (development)" connection type. Production builds never show it; self-hosted connections come from the companion add-on.
+`scripts/seed-store.sh` copies `scripts/dev/fleetbase-dev-host.php` into `wp-content/mu-plugins`, so the wizard offers the "Custom host (development)" connection type. The plugin itself only connects to Fleetbase Cloud, and `scripts` is left out of the zip. Self-hosted connections will come from the companion add-on, which carries its own connection code.
 
 ## Quality gates
 

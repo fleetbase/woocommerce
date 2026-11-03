@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Sync;
 
+defined( 'ABSPATH' ) || exit;
+
 final class WebhookSignature {
 
 	public const HEADER    = 'X-Fleetbase-Signature';

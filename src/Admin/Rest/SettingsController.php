@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Admin\Rest;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\WebhookUrl;
 
+defined( 'ABSPATH' ) || exit;
+
 final class SettingsController extends RestController {
 
 	public function register_routes(): void {

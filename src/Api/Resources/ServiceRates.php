@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Api\Resources;
 
 use Fleetbase\WooCommerce\Api\ApiResource;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ServiceRates extends ApiResource {
 
 	protected string $path = 'service-rates';

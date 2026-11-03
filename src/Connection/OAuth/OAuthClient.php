@@ -21,6 +21,8 @@ use Fleetbase\WooCommerce\Api\Exception\TransportException;
 use Fleetbase\WooCommerce\Api\Transport;
 use Fleetbase\WooCommerce\Api\TransportResponse;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OAuthClient {
 
 	public const SOFTWARE_ID = 'fleetbase-woocommerce';

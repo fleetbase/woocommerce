@@ -13,6 +13,8 @@ use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Shipping\NoService;
 
+defined( 'ABSPATH' ) || exit;
+
 final class BlocksIntegration implements Hookable, IntegrationInterface {
 
 	public const FRONTEND_HANDLE = 'fleetbase-wc-checkout-frontend';

@@ -17,6 +17,8 @@ use Fleetbase\WooCommerce\Api\WpHttpTransport;
 use Fleetbase\WooCommerce\Support\ConnectionStore;
 use Fleetbase\WooCommerce\Support\Logger;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Plugin {
 
 	private static ?Plugin $instance = null;

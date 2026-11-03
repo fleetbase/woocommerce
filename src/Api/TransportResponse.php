@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Api;
 
+defined( 'ABSPATH' ) || exit;
+
 final class TransportResponse {
 
 	/**

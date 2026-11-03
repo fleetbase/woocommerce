@@ -18,6 +18,8 @@ use Fleetbase\WooCommerce\Sync\Reconciler;
 use Fleetbase\WooCommerce\Sync\StatusMap;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class DeliveriesController extends RestController {
 
 	public function register_routes(): void {

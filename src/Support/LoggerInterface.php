@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Support;
 
+defined( 'ABSPATH' ) || exit;
+
 interface LoggerInterface {
 	/**
 	 * @param array<string, mixed> $context

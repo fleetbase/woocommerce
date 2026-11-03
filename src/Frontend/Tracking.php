@@ -14,6 +14,8 @@ use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Sync\StatusMap;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Tracking implements Hookable {
 
 	public const SHORTCODE = 'fleetbase_tracking';
@@ -36,7 +38,7 @@ final class Tracking implements Hookable {
 		}
 		$html = $this->summary_html( $order );
 		if ( '' !== $html ) {
-			echo '<section class="fleetbase-wc-tracking">' . $html . '</section>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+			echo '<section class="fleetbase-wc-tracking">' . wp_kses_post( $html ) . '</section>';
 		}
 	}
 
@@ -84,7 +86,7 @@ final class Tracking implements Hookable {
 			if ( null === $order ) {
 				echo '<p class="fleetbase-wc-tracking__notfound">' . esc_html__( 'We could not find a delivery with that tracking number.', 'fleetbase-for-woocommerce' ) . '</p>';
 			} else {
-				echo $this->summary_html( $order, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped parts.
+				echo wp_kses_post( $this->summary_html( $order, true ) );
 			}
 		}
 		echo '</div>';

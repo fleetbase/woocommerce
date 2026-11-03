@@ -1,6 +1,6 @@
 <?php
 /**
- * Fleetbase Cloud: fixed host, no licence.
+ * Fleetbase Cloud: the plugin's connection, on a fixed host.
  *
  * @package Fleetbase\WooCommerce
  */
@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Fleetbase\WooCommerce\Connection;
 
 use Fleetbase\WooCommerce\Api\Connection;
+
+defined( 'ABSPATH' ) || exit;
 
 final class CloudProvider implements ConnectionProvider {
 
