@@ -87,6 +87,25 @@ final class Connection {
 		return $host;
 	}
 
+	/**
+	 * Whether the API key and order data would be encrypted on the way to this host, or stay on
+	 * a private network. Plain http to anything public is not.
+	 */
+	public static function is_transport_secure( string $host ): bool {
+		$parts = self::parse_url( self::normalize_host( $host ) );
+		if ( ! is_array( $parts ) || empty( $parts['host'] ) ) {
+			return false;
+		}
+		if ( 'https' === strtolower( (string) ( $parts['scheme'] ?? '' ) ) ) {
+			return true;
+		}
+		$hostname = trim( strtolower( (string) $parts['host'] ), '[]' );
+		if ( false !== filter_var( $hostname, FILTER_VALIDATE_IP ) ) {
+			return false === filter_var( $hostname, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+		}
+		return ! str_contains( $hostname, '.' ) || 1 === preg_match( '/\.(localhost|local|internal|lan|test)$/', $hostname );
+	}
+
 	public static function is_valid_host( string $host ): bool {
 		$host  = self::normalize_host( $host );
 		$parts = self::parse_url( $host );

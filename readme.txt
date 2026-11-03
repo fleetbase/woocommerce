@@ -35,11 +35,11 @@ Fleetbase for WooCommerce connects your store to [Fleetbase](https://fleetbase.i
 
 **Pricing**
 
-The plugin is free. Fleetbase Cloud is $29/month plus $5/month per driver and per vehicle, with orders unmetered. Fleetbase is open source and can also be self-hosted.
+The plugin is free, with Fleetbase Cloud or your own server. Fleetbase Cloud is $29/month plus $5/month per driver and per vehicle, with orders unmetered. Fleetbase is open source, so you can also host it yourself and connect the plugin to it at no cost.
 
 == External services ==
 
-This plugin connects to the Fleetbase API at https://api.fleetbase.io using the API key you enter in the setup wizard, or the one Fleetbase creates when you choose "Connect with Fleetbase". Nothing is sent before you connect.
+This plugin connects to a Fleetbase API using the API key you enter in the setup wizard, or the one Fleetbase creates when you choose "Connect with Fleetbase". With Fleetbase Cloud, that API is at https://api.fleetbase.io. With a self-hosted server, it is the host you enter, and nothing below goes to Fleetbase Cloud. Nothing is sent before you connect.
 
 When you choose "Connect with Fleetbase", your store's admin URL is sent to Fleetbase once to register the store as an app, and you are sent to Fleetbase to sign in and approve. After connecting, the plugin registers your store's webhook URL with Fleetbase so it can send status updates.
 
@@ -47,7 +47,7 @@ What is sent: for each order you choose to deliver, the pickup location, the cus
 
 What is received: delivery status, driver name, tracking numbers and links, proof-of-delivery links, delivery quotes, and your drivers, vehicles and rates.
 
-Fleetbase terms of service: https://fleetbase.io/terms. Privacy policy: https://fleetbase.io/privacy.
+Fleetbase Cloud terms of service: https://fleetbase.io/terms. Privacy policy: https://fleetbase.io/privacy.
 
 The plugin does not send any data to Fleetbase or anyone else about visitors who do not check out, and it does not phone home.
 
@@ -69,7 +69,7 @@ Status updates are set up automatically when you connect. If Fleetbase cannot re
 
 = Do I need a Fleetbase account? =
 
-Yes. Create a free trial at https://console.fleetbase.io/onboard.
+You need Fleetbase Cloud or your own Fleetbase server. Create a free Cloud trial at https://console.fleetbase.io/onboard.
 
 = What does "Connect with Fleetbase" do? =
 
@@ -77,7 +77,7 @@ It signs you in to Fleetbase and asks you to approve this store for one of your 
 
 = Can I connect to my own Fleetbase instance? =
 
-Not yet. This version connects to Fleetbase Cloud. A connector for self-hosted Fleetbase instances is planned as a separate add-on.
+Yes, at no cost. Choose "Self-hosted Fleetbase" in the setup wizard and enter your API host. A site administrator has to do this, and the server needs https unless it is on a private network. "Connect with Fleetbase" needs Fleetbase core-api 1.6.74 or newer; on older servers, paste an API key instead. Automatic status updates need your store to have a public address that your server can reach.
 
 = Does it work with the block checkout? =
 

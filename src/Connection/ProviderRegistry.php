@@ -21,7 +21,10 @@ final class ProviderRegistry {
 	 */
 	public function all(): array {
 		if ( null === $this->providers ) {
-			$providers = [ CloudProvider::ID => new CloudProvider() ];
+			$providers = [
+				CloudProvider::ID      => new CloudProvider(),
+				SelfHostedProvider::ID => new SelfHostedProvider(),
+			];
 
 			/**
 			 * Register additional connection providers.

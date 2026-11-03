@@ -262,14 +262,6 @@ export default function Setup() {
 								) }
 							</p>
 						) }
-						{ state.providers.length === 1 && (
-							<p className="fbwc-muted">
-								{ __(
-									'Running your own Fleetbase instance? This version connects to Fleetbase Cloud. A connector for self-hosted instances is planned.',
-									'fleetbase-for-woocommerce'
-								) }
-							</p>
-						) }
 						<div className="fbwc-actions">
 							<Button
 								variant="primary"
@@ -330,6 +322,10 @@ export default function Setup() {
 									<Button
 										variant="primary"
 										href={ oauthUrl() }
+										disabled={
+											providerDef?.host_editable &&
+											! host.trim()
+										}
 									>
 										{ __(
 											'Connect with Fleetbase',

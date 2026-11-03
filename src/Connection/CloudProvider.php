@@ -1,6 +1,6 @@
 <?php
 /**
- * Fleetbase Cloud: the plugin's connection, on a fixed host.
+ * Fleetbase Cloud: hosted by Fleetbase, on a fixed host.
  *
  * @package Fleetbase\WooCommerce
  */

@@ -1,7 +1,7 @@
 <?php
 /**
- * A way of reaching a Fleetbase API. The plugin ships Fleetbase Cloud; others can be registered
- * with the fleetbase_wc_connection_providers filter.
+ * A way of reaching a Fleetbase API: Fleetbase Cloud or a self-hosted server. Others can be
+ * registered with the fleetbase_wc_connection_providers filter.
  *
  * @package Fleetbase\WooCommerce
  */

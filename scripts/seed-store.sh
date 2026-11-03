@@ -50,10 +50,6 @@ WC_Cache_Helper::get_transient_version( "shipping", true );
 echo "zone " . $zone->get_id() . " ready: Washington state, sorted first\n";
 '
 
-echo "==> Development host mu-plugin"
-mkdir -p "${COMPOSE_DIR}/wordpress/wp-content/mu-plugins"
-cp "${HERE}/dev/fleetbase-dev-host.php" "${COMPOSE_DIR}/wordpress/wp-content/mu-plugins/fleetbase-dev-host.php"
-
 echo "==> Dev constants in wp-config.php"
 wp config set WP_DEBUG true --raw --type=constant >/dev/null
 wp config set WP_DEBUG_LOG true --raw --type=constant >/dev/null

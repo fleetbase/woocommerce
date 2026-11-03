@@ -33,11 +33,11 @@ docker compose run --rm wpcli plugin list
 | Admin | http://localhost:8800/wp-admin (user and generated password in `.sandbox.env`, written by `scripts/seed-store.sh`; set `FBWC_DEV_USER` / `FBWC_DEV_PASS` to choose your own) |
 | Plugin pages | Fleetbase menu: Dashboard, Setup, Settings |
 | Fleetbase API from your Mac | http://localhost:8000 |
-| Fleetbase API from inside the WP container | http://host.docker.internal:8000 (the wizard prefills this) |
+| Fleetbase API from inside the WP container | http://host.docker.internal:8000 (enter this in the wizard) |
 | Fleetbase console | http://localhost:4200 |
 | Plugin log | WooCommerce → Status → Logs, source `fleetbase` |
 
-`scripts/seed-store.sh` copies `scripts/dev/fleetbase-dev-host.php` into `wp-content/mu-plugins`, so the wizard offers the "Custom host (development)" connection type. The plugin itself only connects to Fleetbase Cloud, and `scripts` is left out of the zip. Self-hosted connections will come from the companion add-on, which carries its own connection code.
+To connect the sandbox, choose "Self-hosted Fleetbase" in the wizard and enter `http://host.docker.internal:8000`. Plain http is accepted because that host is on a private network; anything public needs https.
 
 ## Quality gates
 
@@ -149,7 +149,7 @@ Server-side calls always use the connection host. Only the authorization endpoin
 
 Locally:
 
-- Pick "Custom host (development)" with host `http://host.docker.internal:8000`, then Connect with Fleetbase.
+- Pick "Self-hosted Fleetbase" with host `http://host.docker.internal:8000`, then Connect with Fleetbase.
 - The consent screen is the local console at http://localhost:4200. Sign in there as an administrator of "Woo Test Store".
 - The store registers as "Fleetbase for WooCommerce (localhost)" and appears under Account → Connected apps; its key appears under Developers → API Keys.
 - Failures come back as `?fleetbase_oauth=<reason>` on the setup page, with detail in the plugin log (source `fleetbase`).
