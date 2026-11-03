@@ -265,7 +265,7 @@ export default function Setup() {
 						{ state.providers.length === 1 && (
 							<p className="fbwc-muted">
 								{ __(
-									'Running your own Fleetbase instance? Install the Fleetbase Self-Hosted Connector add-on to connect to a custom host.',
+									'Running your own Fleetbase instance? This version connects to Fleetbase Cloud. A connector for self-hosted instances is planned.',
 									'fleetbase-for-woocommerce'
 								) }
 							</p>

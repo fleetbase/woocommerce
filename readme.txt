@@ -71,7 +71,7 @@ It signs you in to Fleetbase and asks you to approve this store for one of your 
 
 = Can I connect to my own Fleetbase instance? =
 
-Self-hosted Fleetbase is supported through the Fleetbase Self-Hosted Connector add-on, available from fleetbase.io.
+Not yet. This version connects to Fleetbase Cloud. A connector for self-hosted Fleetbase instances is planned as a separate add-on.
 
 = Does it work with the block checkout? =
 

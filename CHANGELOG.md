@@ -2,7 +2,7 @@
 
 All notable changes to Fleetbase for WooCommerce are listed here. The format follows Keep a Changelog, and the project uses semantic versioning.
 
-## [1.0.0] — unreleased
+## [1.0.0] — 2026-11-03
 
 ### Added
 - "Connect with Fleetbase": sign in and approve in Fleetbase instead of pasting an API key. Each store registers itself as an OAuth app (PKCE, no secret) and Fleetbase creates an API key for it; removing the store under Connected apps in Fleetbase revokes it. Needs Fleetbase 1.6.74 or newer.

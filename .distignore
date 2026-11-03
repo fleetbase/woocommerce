@@ -29,3 +29,4 @@ playwright.config.js
 .github
 phpstan-php81.neon
 .phpunit.cache
+/.wordpress-org

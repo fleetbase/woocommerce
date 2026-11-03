@@ -27,7 +27,7 @@ Last-mile delivery for WooCommerce stores, powered by [Fleetbase](https://fleetb
 
 - WordPress 6.8 or newer, WooCommerce 9.5 or newer, PHP 8.1 or newer.
 - A [Fleetbase Cloud](https://console.fleetbase.io/onboard) account. The plugin is free; Fleetbase Cloud bills per driver and vehicle, never per order.
-- Self-hosted Fleetbase instances are supported through the separate Fleetbase Self-Hosted Connector add-on.
+- This version connects to Fleetbase Cloud. A connector for self-hosted instances is planned as a separate add-on.
 
 ## Installation
 
