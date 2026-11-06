@@ -31,3 +31,4 @@ phpstan-php81.neon
 .phpunit.cache
 /.wordpress-org
 /.sandbox.env
+.DS_Store
