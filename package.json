@@ -5,8 +5,8 @@
   "description": "Fleetbase for WooCommerce admin and checkout assets",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "build": "wp-scripts build",
-    "start": "wp-scripts start",
+    "build": "wp-scripts build --webpack-src-dir=assets/src",
+    "start": "wp-scripts start --webpack-src-dir=assets/src",
     "lint:js": "wp-scripts lint-js assets/src",
     "lint:css": "wp-scripts lint-style assets/src",
     "format": "wp-scripts format assets/src",

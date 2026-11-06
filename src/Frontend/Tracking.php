@@ -38,6 +38,7 @@ final class Tracking implements Hookable {
 		}
 		$html = $this->summary_html( $order );
 		if ( '' !== $html ) {
+			wp_enqueue_style( 'fleetbase-wc-tracking' );
 			echo '<section class="fleetbase-wc-tracking">' . wp_kses_post( $html ) . '</section>';
 		}
 	}
@@ -78,6 +79,7 @@ final class Tracking implements Hookable {
 			$number = sanitize_text_field( wp_unslash( (string) $_GET[ self::QUERY_VAR ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
+		wp_enqueue_style( 'fleetbase-wc-tracking' );
 		ob_start();
 		echo '<div class="fleetbase-wc-tracking fleetbase-wc-tracking--page">';
 		$this->form( $number );
@@ -104,7 +106,7 @@ final class Tracking implements Hookable {
 		];
 		wp_register_script( 'fleetbase-wc-tracking-editor', FLEETBASE_WC_URL . 'assets/build/tracking-editor.js', (array) $asset['dependencies'], (string) $asset['version'], true );
 		register_block_type(
-			FLEETBASE_WC_PATH . 'assets/src/tracking',
+			FLEETBASE_WC_PATH . 'assets/build/tracking',
 			[
 				'editor_script'   => 'fleetbase-wc-tracking-editor',
 				'render_callback' => function ( array $attributes ): string {
@@ -114,9 +116,11 @@ final class Tracking implements Hookable {
 		);
 	}
 
+	/**
+	 * Registered on every page, enqueued only where tracking is printed.
+	 */
 	public function styles(): void {
 		wp_register_style( 'fleetbase-wc-tracking', false, [], FLEETBASE_WC_VERSION ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-		wp_enqueue_style( 'fleetbase-wc-tracking' );
 		wp_add_inline_style(
 			'fleetbase-wc-tracking',
 			'.fleetbase-wc-tracking{margin:1.5em 0}.fleetbase-wc-tracking__status{font-weight:600}.fleetbase-wc-tracking__form{display:flex;gap:8px;max-width:480px;margin-bottom:1em}.fleetbase-wc-tracking__form input{flex:1}.fleetbase-wc-timeline{list-style:none;margin:1em 0 0;padding:0 0 0 18px;border-left:2px solid #e0e0e0}.fleetbase-wc-timeline li{position:relative;padding:0 0 14px 12px}.fleetbase-wc-timeline li::before{content:"";position:absolute;left:-25px;top:4px;width:10px;height:10px;border-radius:50%;background:#c3c4c7}.fleetbase-wc-timeline li.is-current::before{background:#1e7e34}.fleetbase-wc-timeline time{display:block;font-size:.85em;opacity:.7}.fleetbase-wc-proofs a{margin-right:8px}'

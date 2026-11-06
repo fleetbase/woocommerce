@@ -45,7 +45,7 @@ final class BlocksIntegration implements Hookable, IntegrationInterface {
 		}
 		$this->register_scripts();
 		register_block_type(
-			FLEETBASE_WC_PATH . 'assets/src/checkout',
+			FLEETBASE_WC_PATH . 'assets/build/checkout',
 			[
 				'editor_script' => self::EDITOR_HANDLE,
 			]

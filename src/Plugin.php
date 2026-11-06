@@ -222,7 +222,6 @@ final class Plugin {
 		}
 		update_option( 'fleetbase_wc_version', FLEETBASE_WC_VERSION, true );
 		Support\Capabilities::ensure();
-		set_transient( 'fleetbase_wc_activation_redirect', 1, 60 );
 	}
 
 	public static function deactivate(): void {

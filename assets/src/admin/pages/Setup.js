@@ -303,7 +303,7 @@ export default function Setup() {
 										value={ host }
 										onChange={ setHost }
 										help={ __(
-											'For example https://api.yourcompany.com',
+											'For example https://api.example.com',
 											'fleetbase-for-woocommerce'
 										) }
 										__nextHasNoMarginBottom
@@ -366,7 +366,7 @@ export default function Setup() {
 										value={ host }
 										onChange={ setHost }
 										help={ __(
-											'For example https://api.yourcompany.com',
+											'For example https://api.example.com',
 											'fleetbase-for-woocommerce'
 										) }
 										__nextHasNoMarginBottom
