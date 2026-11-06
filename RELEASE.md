@@ -3,6 +3,8 @@
 ---
 ## Highlights
 
+- **Fleetbase Cloud or your own server.** Connect to Fleetbase Cloud or a self-hosted Fleetbase server, at no cost for the plugin either way.
+- **Connect with Fleetbase.** Sign in and approve the store in Fleetbase instead of pasting an API key. Status updates are registered automatically too, with signed webhooks and a manual fallback. Pasting a key still works.
 - **Live delivery quotes at checkout.** The "Fleetbase Delivery" shipping method prices every order from your Fleetbase service rates, in the block and classic checkout, with caching and an optional flat fallback during outages.
 - **Delivery scheduling.** Customers choose as soon as possible, or a day and time window within the hours, lead time and horizon you configure.
 - **Order sync.** Paid orders become Fleetbase orders in the background with retries, cash-on-delivery support and a per-order sync log. Nothing is ever duplicated.

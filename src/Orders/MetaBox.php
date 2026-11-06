@@ -15,11 +15,13 @@ use Fleetbase\WooCommerce\Support\Compat;
 use Fleetbase\WooCommerce\Sync\OrderMapper;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class MetaBox implements Hookable {
 
 	public function register(): void {
 		add_action( 'add_meta_boxes', [ $this, 'add' ] );
-		add_action( 'admin_head', [ $this, 'styles' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'styles' ] );
 	}
 
 	public function add(): void {
@@ -80,7 +82,7 @@ final class MetaBox implements Hookable {
 		if ( [] !== $rows ) {
 			echo '<table class="fbwc-table">';
 			foreach ( $rows as $label => $value ) {
-				printf( '<tr><th>%s</th><td>%s</td></tr>', esc_html( $label ), $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+				printf( '<tr><th>%s</th><td>%s</td></tr>', esc_html( $label ), wp_kses_post( $value ) );
 			}
 			echo '</table>';
 		}
@@ -110,7 +112,11 @@ final class MetaBox implements Hookable {
 		if ( null === $screen || ( ! str_contains( (string) $screen->id, 'shop_order' ) && ! str_contains( (string) $screen->id, 'wc-orders' ) ) ) {
 			return;
 		}
-		echo '<style>
+		wp_register_style( 'fleetbase-wc-orders', false, [], FLEETBASE_WC_VERSION ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Inline only, no file.
+		wp_enqueue_style( 'fleetbase-wc-orders' );
+		wp_add_inline_style(
+			'fleetbase-wc-orders',
+			'
 			.fbwc-box{font-size:12px}
 			.fbwc-state{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600;background:#f0f0f1;color:#50575e}
 			.fbwc-state--synced{background:#e6f4ea;color:#1e7e34}
@@ -127,6 +133,7 @@ final class MetaBox implements Hookable {
 			.fbwc-log__error{color:#b32d2e}
 			.fbwc-log__warning{color:#996800}
 			.column-fleetbase_delivery .fbwc-state{font-size:11px}
-		</style>';
+		'
+		);
 	}
 }

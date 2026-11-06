@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Admin\Rest;
 
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class DriversController extends RestController {
 
 	public function register_routes(): void {

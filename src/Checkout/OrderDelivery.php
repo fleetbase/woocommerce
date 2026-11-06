@@ -11,12 +11,37 @@ namespace Fleetbase\WooCommerce\Checkout;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OrderDelivery implements Hookable {
 
 	public function register(): void {
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', [ $this, 'admin' ] );
 		add_action( 'woocommerce_order_details_after_order_table', [ $this, 'customer' ] );
 		add_action( 'woocommerce_email_after_order_table', [ $this, 'email' ], 10, 4 );
+		add_filter( 'woocommerce_hidden_order_itemmeta', [ $this, 'hide_item_meta' ] );
+	}
+
+	/**
+	 * The quote details on the shipping line are for the plugin, not for the order screen.
+	 *
+	 * @param array<int, string> $hidden
+	 * @return array<int, string>
+	 */
+	public function hide_item_meta( array $hidden ): array {
+		return array_merge(
+			$hidden,
+			[
+				'_fleetbase_quote_id',
+				'_fleetbase_request_id',
+				'_fleetbase_service_rate_id',
+				'_fleetbase_service_name',
+				'_fleetbase_amount',
+				'_fleetbase_currency',
+				'_fleetbase_description',
+				'_fleetbase_fallback',
+			]
+		);
 	}
 
 	/**

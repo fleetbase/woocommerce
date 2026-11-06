@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin notices and the post-activation redirect.
+ * The "not connected yet" notice on the Plugins screen.
  *
  * @package Fleetbase\WooCommerce
  */
@@ -12,55 +12,52 @@ namespace Fleetbase\WooCommerce\Admin;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Notices implements Hookable {
 
+	public const DISMISS_ACTION = 'fleetbase_wc_dismiss_notice';
+
+	private const DISMISSED_META = 'fleetbase_wc_notice_dismissed';
+
 	public function register(): void {
-		add_action( 'admin_init', [ $this, 'maybe_redirect_to_setup' ] );
 		add_action( 'admin_notices', [ $this, 'maybe_render_not_connected' ] );
+		add_action( 'admin_post_' . self::DISMISS_ACTION, [ $this, 'dismiss' ] );
 	}
 
-	public function maybe_redirect_to_setup(): void {
-		if ( ! get_transient( 'fleetbase_wc_activation_redirect' ) ) {
-			return;
-		}
-		delete_transient( 'fleetbase_wc_activation_redirect' );
-
-		if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_woocommerce' ) ) {
-			return;
-		}
-		// Bulk activations should not hijack the screen.
-		if ( isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			return;
-		}
-		if ( get_option( 'fleetbase_wc_wizard_completed' ) ) {
-			return;
-		}
-		wp_safe_redirect( admin_url( 'admin.php?page=fleetbase-setup' ) );
-		exit;
-	}
-
+	/**
+	 * Shown on the Plugins screen only, until the store is connected or the notice is dismissed.
+	 */
 	public function maybe_render_not_connected(): void {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) || get_user_meta( get_current_user_id(), self::DISMISSED_META, true ) ) {
 			return;
 		}
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( null === $screen ) {
-			return;
-		}
-		$is_plugin_screen = str_contains( (string) $screen->id, 'fleetbase' );
-		$is_wc_screen     = str_contains( (string) $screen->id, 'woocommerce' ) || str_contains( (string) $screen->id, 'shop_order' ) || 'plugins' === $screen->id;
-		if ( $is_plugin_screen || ! $is_wc_screen ) {
+		if ( null === $screen || 'plugins' !== $screen->id ) {
 			return;
 		}
 		if ( Plugin::instance()->connections()->is_connected() ) {
 			return;
 		}
+		$dismiss = wp_nonce_url( admin_url( 'admin-post.php?action=' . self::DISMISS_ACTION ), self::DISMISS_ACTION );
 		printf(
-			'<div class="notice notice-info is-dismissible"><p><strong>%1$s</strong> %2$s <a href="%3$s" class="button button-primary" style="margin-left:8px">%4$s</a></p></div>',
+			'<div class="notice notice-info"><p><strong>%1$s</strong> %2$s <a href="%3$s">%4$s</a> | <a href="%5$s">%6$s</a></p></div>',
 			esc_html__( 'Fleetbase for WooCommerce', 'fleetbase-for-woocommerce' ),
-			esc_html__( 'is installed but not connected yet. Connect your Fleetbase account to start offering delivery at checkout.', 'fleetbase-for-woocommerce' ),
+			esc_html__( 'is not connected yet.', 'fleetbase-for-woocommerce' ),
 			esc_url( admin_url( 'admin.php?page=fleetbase-setup' ) ),
-			esc_html__( 'Run setup', 'fleetbase-for-woocommerce' )
+			esc_html__( 'Run setup', 'fleetbase-for-woocommerce' ),
+			esc_url( $dismiss ),
+			esc_html__( 'Dismiss', 'fleetbase-for-woocommerce' )
 		);
+	}
+
+	public function dismiss(): void {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'You are not allowed to do that.', 'fleetbase-for-woocommerce' ), 403 );
+		}
+		check_admin_referer( self::DISMISS_ACTION );
+		update_user_meta( get_current_user_id(), self::DISMISSED_META, 1 );
+		wp_safe_redirect( wp_get_referer() ?: admin_url( 'plugins.php' ) );
+		exit;
 	}
 }

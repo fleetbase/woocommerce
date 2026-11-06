@@ -14,6 +14,8 @@ use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Sync\OrderSyncer;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OrderActions implements Hookable {
 
 	public const ACTION_SYNC   = 'fleetbase_sync';

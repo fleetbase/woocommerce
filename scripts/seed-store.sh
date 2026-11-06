@@ -51,8 +51,6 @@ echo "zone " . $zone->get_id() . " ready: Washington state, sorted first\n";
 '
 
 echo "==> Dev constants in wp-config.php"
-wp config set FLEETBASE_WC_ALLOW_CUSTOM_HOST true --raw --type=constant >/dev/null
-wp config set FLEETBASE_WC_DEFAULT_HOST "http://host.docker.internal:8000" --type=constant >/dev/null
 wp config set WP_DEBUG true --raw --type=constant >/dev/null
 wp config set WP_DEBUG_LOG true --raw --type=constant >/dev/null
 wp config set WP_DEBUG_DISPLAY false --raw --type=constant >/dev/null

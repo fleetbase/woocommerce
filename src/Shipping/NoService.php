@@ -14,6 +14,8 @@ use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Address;
 
+defined( 'ABSPATH' ) || exit;
+
 final class NoService implements Hookable {
 
 	private const SESSION_KEY = 'fleetbase_wc_no_service';

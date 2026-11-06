@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Frontend\Emails;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class EmailRegistrar implements Hookable {
 
 	public function register(): void {

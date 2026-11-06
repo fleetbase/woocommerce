@@ -20,6 +20,8 @@ use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Crypto;
 use Fleetbase\WooCommerce\Support\WebhookUrl;
 
+defined( 'ABSPATH' ) || exit;
+
 final class WebhookRegistrar implements Hookable {
 
 	public const OPTION = 'fleetbase_wc_webhook_endpoint';

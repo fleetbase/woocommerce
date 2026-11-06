@@ -13,6 +13,8 @@ use Fleetbase\WooCommerce\Api\Money;
 use Fleetbase\WooCommerce\Checkout\DeliveryChoice;
 use Fleetbase\WooCommerce\Support\Address;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OrderMapper {
 
 	/** @var array<string, mixed> */

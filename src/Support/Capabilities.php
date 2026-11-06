@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Support;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Capabilities implements Hookable {
 
 	public const CAP  = 'manage_fleetbase_deliveries';

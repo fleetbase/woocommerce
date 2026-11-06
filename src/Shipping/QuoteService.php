@@ -16,6 +16,8 @@ use Fleetbase\WooCommerce\Api\Money;
 use Fleetbase\WooCommerce\Support\Address;
 use Fleetbase\WooCommerce\Support\LoggerInterface;
 
+defined( 'ABSPATH' ) || exit;
+
 final class QuoteService {
 
 	public const RATES_TTL = 3600;
