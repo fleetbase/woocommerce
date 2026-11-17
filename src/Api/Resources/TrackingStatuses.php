@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Api\Resources;
 
 use Fleetbase\WooCommerce\Api\ApiResource;
 
+defined( 'ABSPATH' ) || exit;
+
 final class TrackingStatuses extends ApiResource {
 
 	protected string $path = 'tracking-statuses';

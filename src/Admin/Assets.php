@@ -15,6 +15,8 @@ use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Pickup;
 use Fleetbase\WooCommerce\Support\StoreInfo;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Assets implements Hookable {
 
 	public const HANDLE = 'fleetbase-wc-admin';
@@ -71,7 +73,7 @@ final class Assets implements Hookable {
 			],
 			'consoleUrl'               => 'https://console.fleetbase.io',
 			'signupUrl'                => 'https://console.fleetbase.io/onboard',
-			'docsUrl'                  => 'https://fleetbase.io/docs/woocommerce',
+			'docsUrl'                  => 'https://github.com/fleetbase/woocommerce#readme',
 			'providers'                => $plugin->get( ProviderRegistry::class )->describe(),
 			'connection'               => $plugin->connections()->status(),
 			'store'                    => StoreInfo::describe(),

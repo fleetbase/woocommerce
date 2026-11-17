@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Orders;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Statuses implements Hookable {
 
 	public const OUT_FOR_DELIVERY = 'out-for-delivery';

@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Admin\Rest;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Pickup;
 
+defined( 'ABSPATH' ) || exit;
+
 final class PlacesController extends RestController {
 
 	public function register_routes(): void {

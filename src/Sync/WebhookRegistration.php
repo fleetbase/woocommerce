@@ -16,6 +16,8 @@ use Fleetbase\WooCommerce\Api\Exception\NotFoundException;
 use Fleetbase\WooCommerce\Api\Exception\ValidationException;
 use Fleetbase\WooCommerce\Api\Fleetbase;
 
+defined( 'ABSPATH' ) || exit;
+
 final class WebhookRegistration {
 
 	/**

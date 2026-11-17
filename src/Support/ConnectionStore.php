@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Support;
 use Fleetbase\WooCommerce\Api\Connection;
 use Fleetbase\WooCommerce\Connection\CloudProvider;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ConnectionStore {
 
 	public const OPTION = 'fleetbase_wc_connection';

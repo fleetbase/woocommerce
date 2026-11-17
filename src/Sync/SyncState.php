@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Sync;
 
+defined( 'ABSPATH' ) || exit;
+
 final class SyncState {
 
 	public const META_ORDER_ID        = '_fleetbase_order_id';

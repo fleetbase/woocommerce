@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Support;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Pickup {
 
 	public const OPTION = 'fleetbase_wc_pickup';

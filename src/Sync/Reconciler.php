@@ -14,6 +14,8 @@ use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Compat;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Reconciler implements Hookable {
 
 	public const HOOK  = 'fleetbase_wc_reconcile_order';

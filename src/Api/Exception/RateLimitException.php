@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Api\Exception;
 
+defined( 'ABSPATH' ) || exit;
+
 class RateLimitException extends ApiException {
 
 	private int $retry_after = 0;

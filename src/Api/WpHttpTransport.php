@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Api;
 
 use Fleetbase\WooCommerce\Api\Exception\TransportException;
 
+defined( 'ABSPATH' ) || exit;
+
 final class WpHttpTransport implements Transport {
 
 	/**

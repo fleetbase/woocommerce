@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Frontend\Emails;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OutForDeliveryEmail extends \WC_Email {
 
 	public function __construct() {

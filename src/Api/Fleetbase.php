@@ -24,6 +24,8 @@ use Fleetbase\WooCommerce\Api\Resources\Vehicles;
 use Fleetbase\WooCommerce\Api\Resources\WebhookEndpoints;
 use Fleetbase\WooCommerce\Api\Resources\Zones;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Fleetbase {
 
 	/** @var array<string, ApiResource> */

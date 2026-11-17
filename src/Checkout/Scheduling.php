@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Checkout;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Scheduling {
 
 	public const ASAP = 'asap';

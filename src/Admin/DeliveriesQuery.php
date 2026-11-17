@@ -12,6 +12,8 @@ namespace Fleetbase\WooCommerce\Admin;
 use Fleetbase\WooCommerce\Sync\StatusMap;
 use Fleetbase\WooCommerce\Sync\SyncState;
 
+defined( 'ABSPATH' ) || exit;
+
 final class DeliveriesQuery {
 
 	public const PER_PAGE_MAX = 100;

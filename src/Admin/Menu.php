@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Admin;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Menu implements Hookable {
 
 	public const CAPABILITY = 'manage_woocommerce';

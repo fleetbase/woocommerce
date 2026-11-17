@@ -15,6 +15,8 @@ use Fleetbase\WooCommerce\Connection\ConnectionProvider;
 use Fleetbase\WooCommerce\Connection\ProviderRegistry;
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ConnectionController extends RestController {
 
 	public function register_routes(): void {

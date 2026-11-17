@@ -17,6 +17,8 @@ use Fleetbase\WooCommerce\Api\WpHttpTransport;
 use Fleetbase\WooCommerce\Support\ConnectionStore;
 use Fleetbase\WooCommerce\Support\Logger;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Plugin {
 
 	private static ?Plugin $instance = null;
@@ -220,7 +222,6 @@ final class Plugin {
 		}
 		update_option( 'fleetbase_wc_version', FLEETBASE_WC_VERSION, true );
 		Support\Capabilities::ensure();
-		set_transient( 'fleetbase_wc_activation_redirect', 1, 60 );
 	}
 
 	public static function deactivate(): void {

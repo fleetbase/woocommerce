@@ -44,6 +44,15 @@ final class ConnectionTest extends TestCase {
 		$this->assertStringNotContainsString( 'wXmik', $c->masked_key() );
 	}
 
+	public function test_plain_http_is_only_accepted_on_a_private_network(): void {
+		foreach ( [ 'https://api.example.com', 'api.example.com', 'http://localhost:8000', 'http://127.0.0.1:8000', 'http://10.0.0.5', 'http://192.168.1.20:8000', 'http://[::1]:8000', 'http://application:8000', 'http://host.docker.internal:8000', 'http://fleetbase.local' ] as $host ) {
+			$this->assertTrue( Connection::is_transport_secure( $host ), $host );
+		}
+		foreach ( [ 'http://api.example.com', 'http://8.8.8.8', 'http://[2001:4860:4860::8888]', 'http://localhost.example.com' ] as $host ) {
+			$this->assertFalse( Connection::is_transport_secure( $host ), $host );
+		}
+	}
+
 	public function test_host_validation(): void {
 		$this->assertTrue( Connection::is_valid_host( 'https://api.fleetbase.io' ) );
 		$this->assertTrue( Connection::is_valid_host( 'localhost:8000' ) );

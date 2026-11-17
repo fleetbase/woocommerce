@@ -13,6 +13,8 @@ use Fleetbase\WooCommerce\Admin\ServiceRateForm;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Shipping\QuoteCacheVersion;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ServiceRatesController extends RestController {
 
 	public function register_routes(): void {

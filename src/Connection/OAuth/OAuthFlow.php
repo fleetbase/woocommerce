@@ -25,6 +25,8 @@ use Fleetbase\WooCommerce\Connection\ProviderRegistry;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class OAuthFlow implements Hookable {
 
 	public const ACTION        = 'fleetbase_wc_oauth';

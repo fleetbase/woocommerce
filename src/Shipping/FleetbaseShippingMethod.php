@@ -13,6 +13,8 @@ use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\Address;
 use Fleetbase\WooCommerce\Support\Pickup;
 
+defined( 'ABSPATH' ) || exit;
+
 final class FleetbaseShippingMethod extends \WC_Shipping_Method {
 
 	public const ID = 'fleetbase';

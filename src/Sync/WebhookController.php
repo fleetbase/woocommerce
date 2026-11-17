@@ -15,6 +15,8 @@ use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 use Fleetbase\WooCommerce\Support\WebhookUrl;
 
+defined( 'ABSPATH' ) || exit;
+
 final class WebhookController implements Hookable {
 
 	public const OPTION_LAST = 'fleetbase_wc_webhook_last';

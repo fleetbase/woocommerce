@@ -11,16 +11,33 @@ namespace Fleetbase\WooCommerce\Checkout;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ClassicCheckout implements Hookable {
 
 	public const FIELD = 'fleetbase_delivery';
 
 	public function register(): void {
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ], 20 );
 		add_action( 'woocommerce_review_order_after_shipping', [ $this, 'render' ] );
 		add_action( 'woocommerce_checkout_update_order_review', [ $this, 'capture_from_review' ] );
 		add_action( 'woocommerce_checkout_process', [ $this, 'validate' ] );
 		add_action( 'woocommerce_checkout_create_order', [ $this, 'save' ], 10, 2 );
 		add_action( 'woocommerce_checkout_order_processed', [ $this, 'reset_session' ] );
+	}
+
+	/**
+	 * Refresh the review when the delivery time changes. The listener is delegated because
+	 * WooCommerce replaces the select on every refresh.
+	 */
+	public function enqueue(): void {
+		wp_add_inline_script(
+			'wc-checkout',
+			sprintf(
+				'jQuery( function ( $ ) { $( document.body ).on( "change", "#%s", function () { $( document.body ).trigger( "update_checkout" ); } ); } );',
+				esc_js( self::FIELD )
+			)
+		);
 	}
 
 	public function render(): void {
@@ -42,17 +59,6 @@ final class ClassicCheckout implements Hookable {
 						<option value="<?php echo esc_attr( $option['value'] ); ?>" <?php selected( $selected, $option['value'] ); ?>><?php echo esc_html( $option['label'] ); ?></option>
 					<?php endforeach; ?>
 				</select>
-				<script>
-					( function () {
-						var select = document.getElementById( <?php echo wp_json_encode( self::FIELD ); ?> );
-						if ( select && window.jQuery && ! select.dataset.bound ) {
-							select.dataset.bound = '1';
-							select.addEventListener( 'change', function () {
-								window.jQuery( document.body ).trigger( 'update_checkout' );
-							} );
-						}
-					} )();
-				</script>
 			</td>
 		</tr>
 		<?php

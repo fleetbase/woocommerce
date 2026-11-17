@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Checkout;
 
+defined( 'ABSPATH' ) || exit;
+
 final class DeliveryChoice {
 
 	public const SESSION_VALUE        = 'fleetbase_wc_delivery_choice';

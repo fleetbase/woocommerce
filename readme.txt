@@ -35,26 +35,46 @@ Fleetbase for WooCommerce connects your store to [Fleetbase](https://fleetbase.i
 
 **Pricing**
 
-The plugin is free. Fleetbase Cloud is $29/month plus $5/month per driver and per vehicle, with orders unmetered. Fleetbase is open source and can also be self-hosted.
+The plugin is free, with Fleetbase Cloud or your own server. Fleetbase Cloud is $29/month plus $5/month per driver and per vehicle, with orders unmetered. Fleetbase is open source, so you can also host it yourself and connect the plugin to it at no cost.
 
 == External services ==
 
-This plugin connects to the Fleetbase API at https://api.fleetbase.io using the API key you enter in the setup wizard, or the one Fleetbase creates when you choose "Connect with Fleetbase". Nothing is sent before you connect.
+This plugin relies on Fleetbase, a delivery management service, to price deliveries, create delivery jobs and report their status. Nothing is sent until you connect the plugin in its setup wizard, and activating the plugin contacts no one.
 
-When you choose "Connect with Fleetbase", your store's admin URL is sent to Fleetbase once to register the store as an app, and you are sent to Fleetbase to sign in and approve. After connecting, the plugin registers your store's webhook URL with Fleetbase so it can send status updates.
+= Fleetbase API =
 
-What is sent: for each order you choose to deliver, the pickup location, the customer's delivery address, name, email and phone number, item names, SKUs, quantities, prices, weights and dimensions, order totals, payment method, your chosen delivery time and the WooCommerce order number. At checkout, the customer's address is sent to obtain delivery quotes. During setup, your store address is sent for geocoding. Drivers, vehicles and service rates you manage in WordPress are created in your Fleetbase account.
+What it is: the API of Fleetbase Cloud, provided by Fleetbase, or of a Fleetbase server you host yourself.
 
-What is received: delivery status, driver name, tracking numbers and links, proof-of-delivery links, delivery quotes, and your drivers, vehicles and rates.
+Where data goes: https://api.fleetbase.io when you choose Fleetbase Cloud. When you choose "Self-hosted Fleetbase", it goes only to the API host you enter, and nothing is sent to Fleetbase Cloud.
 
-Fleetbase terms of service: https://fleetbase.io/terms. Privacy policy: https://fleetbase.io/privacy.
+What is sent, and when:
 
-The plugin does not send any data to Fleetbase or anyone else about visitors who do not check out, and it does not phone home.
+* When you connect: the API key you enter. With "Connect with Fleetbase", your store's admin address is sent once so the store can register as an app, your browser opens Fleetbase to sign in and approve, and Fleetbase returns an API key for the store. The plugin then registers your store's status-update address with Fleetbase.
+* During setup: your store address, to find your pickup location.
+* At checkout, when a customer enters or changes a delivery address: that address, the pickup location and the chosen delivery time, to get delivery prices.
+* When an order is sent for delivery (by default when it is paid and uses Fleetbase Delivery): the pickup location, the customer's delivery address, name, email and phone number, item names, SKUs, quantities, prices, weights and dimensions, order totals, payment method, the chosen delivery time and the WooCommerce order number.
+* While a delivery is open: requests for its current status, every few minutes if status updates cannot reach your store.
+* When you manage drivers, vehicles, service rates or deliveries in WordPress admin: the details you enter.
+
+What is received: delivery prices, delivery status, driver name, tracking numbers and links, proof-of-delivery links, and your drivers, vehicles and rates.
+
+Fleetbase Cloud terms of service: https://fleetbase.io/terms
+Fleetbase Cloud privacy policy: https://fleetbase.io/privacy
+
+A self-hosted server is run by you or your provider, under your own terms.
+
+The plugin sends nothing to Fleetbase or anyone else about visitors who do not check out, and it does not send usage data.
+
+== Source code ==
+
+The JavaScript and CSS in `assets/build` are compiled. The readable source is in `assets/src` in the plugin's public repository: https://github.com/fleetbase/woocommerce
+
+To build it yourself, install Node.js and pnpm, then run `pnpm install` and `pnpm build` in the repository.
 
 == Installation ==
 
 1. Install and activate the plugin. WooCommerce 9.5 or newer is required.
-2. Follow the setup wizard: click "Connect with Fleetbase", sign in and approve, then confirm your pickup location and add "Fleetbase Delivery" to a shipping zone. You can paste an API key instead if you prefer.
+2. Open Fleetbase → Setup in WordPress admin and follow the wizard: click "Connect with Fleetbase", sign in and approve, then confirm your pickup location and add "Fleetbase Delivery" to a shipping zone. You can paste an API key instead if you prefer.
 3. Create at least one service rate under Fleetbase → Service rates. Customers will now see a delivery price at checkout.
 
 Status updates are set up automatically when you connect. If Fleetbase cannot reach your store's address, the wizard shows the webhook URL to add in your Fleetbase console, and the plugin checks for updates every few minutes in the meantime.
@@ -63,7 +83,7 @@ Status updates are set up automatically when you connect. If Fleetbase cannot re
 
 = Do I need a Fleetbase account? =
 
-Yes. Create a free trial at https://console.fleetbase.io/onboard.
+You need Fleetbase Cloud or your own Fleetbase server. Create a free Cloud trial at https://console.fleetbase.io/onboard.
 
 = What does "Connect with Fleetbase" do? =
 
@@ -71,7 +91,7 @@ It signs you in to Fleetbase and asks you to approve this store for one of your 
 
 = Can I connect to my own Fleetbase instance? =
 
-Self-hosted Fleetbase is supported through the Fleetbase Self-Hosted Connector add-on, available from fleetbase.io.
+Yes, at no cost. Choose "Self-hosted Fleetbase" in the setup wizard and enter your API host. A site administrator has to do this, and the server needs https unless it is on a private network. "Connect with Fleetbase" needs Fleetbase core-api 1.6.74 or newer; on older servers, paste an API key instead. Automatic status updates need your store to have a public address that your server can reach.
 
 = Does it work with the block checkout? =
 

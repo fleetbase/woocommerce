@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Sync;
 
+defined( 'ABSPATH' ) || exit;
+
 final class StatusMap {
 
 	public const OUT_FOR_DELIVERY = 'out-for-delivery';
@@ -83,21 +85,14 @@ final class StatusMap {
 	public static function label( string $fleetbase_status ): string {
 		$status = strtolower( trim( $fleetbase_status ) );
 		$labels = [
-			'created'    => self::t( 'Created' ),
-			'dispatched' => self::t( 'Dispatched' ),
-			'started'    => self::t( 'Driver on the way' ),
-			'enroute'    => self::t( 'En route' ),
-			'completed'  => self::t( 'Delivered' ),
-			'canceled'   => self::t( 'Cancelled' ),
-			'cancelled'  => self::t( 'Cancelled' ),
+			'created'    => __( 'Created', 'fleetbase-for-woocommerce' ),
+			'dispatched' => __( 'Dispatched', 'fleetbase-for-woocommerce' ),
+			'started'    => __( 'Driver on the way', 'fleetbase-for-woocommerce' ),
+			'enroute'    => __( 'En route', 'fleetbase-for-woocommerce' ),
+			'completed'  => __( 'Delivered', 'fleetbase-for-woocommerce' ),
+			'canceled'   => __( 'Cancelled', 'fleetbase-for-woocommerce' ),
+			'cancelled'  => __( 'Cancelled', 'fleetbase-for-woocommerce' ),
 		];
 		return $labels[ $status ] ?? ucfirst( str_replace( '_', ' ', $status ) );
-	}
-
-	/**
-	 * Translate when WordPress is loaded; the mapping itself has no WordPress dependency.
-	 */
-	private static function t( string $text ): string {
-		return function_exists( '__' ) ? __( $text, 'fleetbase-for-woocommerce' ) : $text; // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Literal strings above.
 	}
 }

@@ -262,14 +262,6 @@ export default function Setup() {
 								) }
 							</p>
 						) }
-						{ state.providers.length === 1 && (
-							<p className="fbwc-muted">
-								{ __(
-									'Running your own Fleetbase instance? Install the Fleetbase Self-Hosted Connector add-on to connect to a custom host.',
-									'fleetbase-for-woocommerce'
-								) }
-							</p>
-						) }
 						<div className="fbwc-actions">
 							<Button
 								variant="primary"
@@ -311,7 +303,7 @@ export default function Setup() {
 										value={ host }
 										onChange={ setHost }
 										help={ __(
-											'For example https://api.yourcompany.com',
+											'For example https://api.example.com',
 											'fleetbase-for-woocommerce'
 										) }
 										__nextHasNoMarginBottom
@@ -330,6 +322,10 @@ export default function Setup() {
 									<Button
 										variant="primary"
 										href={ oauthUrl() }
+										disabled={
+											providerDef?.host_editable &&
+											! host.trim()
+										}
 									>
 										{ __(
 											'Connect with Fleetbase',
@@ -370,7 +366,7 @@ export default function Setup() {
 										value={ host }
 										onChange={ setHost }
 										help={ __(
-											'For example https://api.yourcompany.com',
+											'For example https://api.example.com',
 											'fleetbase-for-woocommerce'
 										) }
 										__nextHasNoMarginBottom

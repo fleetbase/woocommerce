@@ -7,6 +7,11 @@ declare(strict_types=1);
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
+if ( ! function_exists( '__' ) ) {
+	function __( string $text, string $domain = 'default' ): string { // phpcs:ignore
+		return $text;
+	}
+}
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __DIR__ ) . '/' );
 }

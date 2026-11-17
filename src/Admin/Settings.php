@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Admin;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Settings {
 
 	public const OPTION = 'fleetbase_wc_settings';

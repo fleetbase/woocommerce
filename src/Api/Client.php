@@ -21,6 +21,8 @@ use Fleetbase\WooCommerce\Api\Exception\TransportException;
 use Fleetbase\WooCommerce\Api\Exception\ValidationException;
 use Fleetbase\WooCommerce\Support\LoggerInterface;
 
+defined( 'ABSPATH' ) || exit;
+
 final class Client {
 
 	private const IDEMPOTENT_METHODS = [ 'GET', 'HEAD', 'PUT', 'DELETE' ];

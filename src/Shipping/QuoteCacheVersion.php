@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Shipping;
 
+defined( 'ABSPATH' ) || exit;
+
 final class QuoteCacheVersion {
 
 	public const OPTION = 'fleetbase_wc_quote_cache_version';

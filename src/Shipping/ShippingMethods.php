@@ -11,6 +11,8 @@ namespace Fleetbase\WooCommerce\Shipping;
 
 use Fleetbase\WooCommerce\Hookable;
 
+defined( 'ABSPATH' ) || exit;
+
 final class ShippingMethods implements Hookable {
 
 	public function register(): void {

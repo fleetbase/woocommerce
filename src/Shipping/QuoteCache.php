@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Shipping;
 
+defined( 'ABSPATH' ) || exit;
+
 interface QuoteCache {
 	/**
 	 * @return array<string, mixed>|null

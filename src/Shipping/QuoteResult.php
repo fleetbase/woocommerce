@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Fleetbase\WooCommerce\Shipping;
 
+defined( 'ABSPATH' ) || exit;
+
 final class QuoteResult {
 
 	public const OK          = 'ok';

@@ -15,6 +15,8 @@ use Fleetbase\WooCommerce\Api\Exception\TransportException;
 use Fleetbase\WooCommerce\Hookable;
 use Fleetbase\WooCommerce\Plugin;
 
+defined( 'ABSPATH' ) || exit;
+
 abstract class RestController implements Hookable {
 
 	public const NAMESPACE = 'fleetbase/v1';
