@@ -79,6 +79,16 @@ Releases follow the same convention as the other Fleetbase repositories: a `rele
 
 If validation fails after the merge, fix `main` and run the Release Tag workflow by hand with the version.
 
+To change only the WordPress.org listing (the text in `readme.txt` or the images in `.wordpress-org`), merge the change to `main` with no version bump. The "Update WordPress.org readme and assets" workflow commits just those files to the plugin SVN, for trunk and the current stable tag. It skips while the readme's `Stable tag` isn't released yet, so during a release the deploy publishes the readme instead.
+
+## Learn more
+
+- [Fleetbase for WooCommerce](https://fleetbase.io/woocommerce): the overview, with pricing and setup
+- [How a delivery works](https://fleetbase.io/woocommerce/delivery-management), from checkout to proof of delivery
+- [Features, screenshots and requirements](https://fleetbase.io/woocommerce/plugin)
+- [WooCommerce delivery plugins compared](https://fleetbase.io/compare/woocommerce-delivery-plugins)
+- [On WordPress.org](https://wordpress.org/plugins/fleetbase-for-woocommerce/)
+
 ## Support
 
 - Issues and feature requests: [GitHub issues](https://github.com/fleetbase/woocommerce/issues)

@@ -1,0 +1,64 @@
+name: Update WordPress.org readme and assets
+
+# Pushes readme.txt and the .wordpress-org listing images (icon, banners,
+# screenshots) to WordPress.org without a plugin release, so changing the
+# listing text or images doesn't need a version bump. Plugin code only ever
+# reaches WordPress.org through a release (deploy-wporg.yml).
+#
+# It only runs when the readme's "Stable tag" is already a tag in the plugin's
+# SVN. During a release merge the new tag doesn't exist yet; syncing then would
+# point the listing at a missing version, so this skips and the release deploy
+# carries the readme instead.
+on:
+  push:
+    branches: [main]
+    paths:
+      - readme.txt
+      - .wordpress-org/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: Commit readme and assets to the plugin SVN
+    runs-on: ubuntu-latest
+    # Shared with the deploy job in deploy-wporg.yml so the two never commit to the SVN at once.
+    concurrency:
+      group: wporg-svn
+      cancel-in-progress: false
+    env:
+      SLUG: fleetbase-for-woocommerce
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the credentials exist and the stable tag is released
+        id: ready
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          if [ -z "$SVN_USERNAME" ] || [ -z "$SVN_PASSWORD" ]; then
+            echo "::notice::SVN_USERNAME / SVN_PASSWORD are not set; skipping."
+            echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          STABLE=$(grep -m1 -i "^Stable tag:" readme.txt | awk '{print $3}' | tr -d '\r')
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://plugins.svn.wordpress.org/$SLUG/tags/$STABLE/")
+          if [ "$CODE" != "200" ]; then
+            echo "::notice::Stable tag $STABLE is not in the WordPress.org SVN yet (HTTP $CODE); the release deploy will publish this readme. Skipping."
+            echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "Stable tag $STABLE is released; updating its readme, trunk's readme and the assets."
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+
+      - name: Update readme and assets
+        if: steps.ready.outputs.ok == 'true'
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: fleetbase-for-woocommerce
+          # Trunk holds the built plugin (vendor, compiled assets), which isn't
+          # in git, so only readme.txt and .wordpress-org are copied.
+          IGNORE_OTHER_FILES: true

@@ -21,6 +21,10 @@ jobs:
   deploy:
     name: Build and commit to the plugin SVN
     runs-on: ubuntu-latest
+    # Shared with wporg-readme-assets.yml so the two never commit to the SVN at once.
+    concurrency:
+      group: wporg-svn
+      cancel-in-progress: false
     env:
       TAG: ${{ inputs.tag }}
     steps:
