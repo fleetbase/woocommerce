@@ -79,6 +79,14 @@ Releases follow the same convention as the other Fleetbase repositories: a `rele
 
 If validation fails after the merge, fix `main` and run the Release Tag workflow by hand with the version.
 
+## Learn more
+
+- [Fleetbase for WooCommerce](https://fleetbase.io/woocommerce): the overview, with pricing and setup
+- [How a delivery works](https://fleetbase.io/woocommerce/delivery-management), from checkout to proof of delivery
+- [Features, screenshots and requirements](https://fleetbase.io/woocommerce/plugin)
+- [WooCommerce delivery plugins compared](https://fleetbase.io/compare/woocommerce-delivery-plugins)
+- [On WordPress.org](https://wordpress.org/plugins/fleetbase-for-woocommerce/)
+
 ## Support
 
 - Issues and feature requests: [GitHub issues](https://github.com/fleetbase/woocommerce/issues)

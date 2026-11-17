@@ -37,6 +37,13 @@ Fleetbase for WooCommerce connects your store to [Fleetbase](https://fleetbase.i
 
 The plugin is free, with Fleetbase Cloud or your own server. Fleetbase Cloud is $29/month plus $5/month per driver and per vehicle, with orders unmetered. Fleetbase is open source, so you can also host it yourself and connect the plugin to it at no cost.
 
+**Learn more**
+
+* [Fleetbase for WooCommerce](https://fleetbase.io/woocommerce): the overview, with pricing and setup.
+* [How a delivery works](https://fleetbase.io/woocommerce/delivery-management): one order followed from checkout through dispatch and tracking to proof of delivery.
+* [Features, screenshots and requirements](https://fleetbase.io/woocommerce/plugin).
+* [WooCommerce delivery plugins compared](https://fleetbase.io/compare/woocommerce-delivery-plugins): how this plugin compares with other ways to deliver WooCommerce orders.
+
 == External services ==
 
 This plugin relies on Fleetbase, a delivery management service, to price deliveries, create delivery jobs and report their status. Nothing is sent until you connect the plugin in its setup wizard, and activating the plugin contacts no one.
