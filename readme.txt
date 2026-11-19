@@ -1,37 +1,38 @@
-=== Fleetbase for WooCommerce ===
+=== Fleetbase – Local Delivery, Drivers & Tracking for WooCommerce ===
 Contributors: fleetbase
-Tags: delivery, local delivery, last mile, shipping, drivers
+Tags: local delivery, delivery drivers, delivery tracking, driver app, delivery date
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Last-mile delivery for WooCommerce. Live delivery quotes at checkout, your own drivers and vehicles, and automatic order sync with Fleetbase.
+Local delivery for WooCommerce with your own drivers: distance-based delivery fees, delivery date and time slots, a driver app and delivery tracking.
 
 == Description ==
 
-Fleetbase for WooCommerce connects your store to [Fleetbase](https://fleetbase.io), the open-source logistics platform, so you can run deliveries with your own drivers and no per-delivery fees.
+Fleetbase for WooCommerce adds local delivery to your store, run by your own drivers, with no per-delivery fees. It connects WooCommerce to [Fleetbase](https://fleetbase.io), the open-source logistics platform, which sends each order to a driver and reports its progress back to the order.
+
+It is made for shops that deliver their own orders: restaurants, grocers, bakeries, florists, pharmacies and other local businesses that today charge a flat delivery fee, take orders over the phone or pay a delivery app a cut of every order.
 
 **At checkout**
 
-* Live delivery prices from your Fleetbase service rates: flat, per distance, or tiered, limited to the areas you serve.
-* Customers choose "as soon as possible" or a day and time window within your delivery hours.
+* Delivery fees from your own rates: a base fee plus a price per kilometre or mile, or a price for each distance tier, limited to the delivery zones you serve. Addresses outside them see a message you write.
+* Same-day or scheduled delivery: customers choose "as soon as possible", or a delivery date and time slot within your delivery hours, lead time and booking window.
 * Works with the Cart and Checkout blocks and the classic checkout.
 
-**After the order**
+**Dispatch and drivers**
 
 * Paid orders become delivery jobs in Fleetbase automatically, with the customer, address, items, quote and delivery time. Cash-on-delivery amounts are passed along.
-* Drivers get the job in the free Fleetbase Navigator app for iOS and Android, with navigation and photo or signature proof of delivery.
-* Status comes back to WooCommerce: "Out for delivery" when the driver leaves, "Completed" when it is delivered, with proof-of-delivery links on the order.
-* Customers get a tracking link on the thank-you page, in their account and in emails, plus an "out for delivery" email.
+* Assign drivers and dispatch from the Deliveries page in WordPress admin.
+* Drivers get each job in the free Fleetbase Navigator driver app for iOS and Android, with turn-by-turn navigation and photo or signature proof of delivery.
+* Manage your delivery fleet, its drivers and vehicles, and your delivery rates without leaving WordPress. A dispatcher role lets staff run deliveries without changing store settings.
 
-**In WordPress admin**
+**Delivery tracking**
 
-* Deliveries page to assign drivers, dispatch, refresh and cancel.
-* Drivers, Vehicles and Service rates pages so day-to-day work does not need a second dashboard.
-* A dispatcher role for staff who run deliveries but should not change store settings.
+* Status comes back to WooCommerce on its own: "Out for delivery" when the driver leaves, "Completed" when the order is delivered, with proof-of-delivery links on the order.
+* Customers get a tracking link on the thank-you page, in their account and in emails, an "out for delivery" email, and a delivery tracking page.
 
 **Pricing**
 
@@ -108,6 +109,22 @@ Yes, both the Cart and Checkout blocks and the classic shortcode checkout are su
 
 By default, orders that used the Fleetbase Delivery shipping method and reached the Processing or Completed status. You can change the trigger statuses or send every physical order in Settings.
 
+= Can I charge delivery fees by distance? =
+
+Yes. Each service rate in Fleetbase is either a base fee plus a price per kilometre or mile, or a set price for each distance tier, and can be limited to a service area or zone. At checkout the plugin quotes your rates for the customer's address and shows the matching prices.
+
+= Can customers choose a delivery date and time? =
+
+Yes. Set your delivery hours, how much notice you need and how many days ahead customers can book. Customers then choose "as soon as possible" or a day and time window at checkout, and the chosen time is sent to Fleetbase with the order.
+
+= Is there an app for drivers? =
+
+Yes, Fleetbase Navigator, free for iOS and Android. Drivers see the deliveries assigned to them, navigate to each stop and collect photo or signature proof of delivery. Their progress updates the WooCommerce order.
+
+= Can customers track their delivery? =
+
+Yes. Customers get a tracking link on the thank-you page, in their account and in their order emails, and an email when the order is out for delivery. You can also add a tracking page anywhere with the `[fleetbase_tracking]` shortcode or block.
+
 = What happens if Fleetbase is down? =
 
 Checkout keeps working: hide the delivery method or offer a flat fallback rate, your choice. Orders queue and sync with retries once Fleetbase is reachable.
@@ -122,6 +139,9 @@ Checkout keeps working: hide the delivery method or offer a flat fallback rate, 
 6. Customer tracking page.
 
 == Changelog ==
+
+= 1.0.1 =
+* New plugin name and a clearer directory listing. No code changes.
 
 = 1.0.0 =
 * Initial release.
