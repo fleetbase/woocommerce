@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Fleetbase for WooCommerce
+ * Plugin Name: Fleetbase – Local Delivery, Drivers & Tracking for WooCommerce
  * Plugin URI: https://fleetbase.io/woocommerce
- * Description: Last-mile delivery for WooCommerce. Live delivery quotes at checkout, driver and vehicle management, and automatic order sync with Fleetbase.
- * Version: 1.0.0
+ * Description: Local delivery for WooCommerce with your own drivers: distance-based delivery fees, delivery date and time slots, a driver app and delivery tracking.
+ * Version: 1.0.1
  * Author: Fleetbase
  * Author URI: https://fleetbase.io
  * Text Domain: fleetbase-for-woocommerce
@@ -25,7 +25,7 @@ if ( defined( 'FLEETBASE_WC_VERSION' ) ) {
 	return;
 }
 
-define( 'FLEETBASE_WC_VERSION', '1.0.0' );
+define( 'FLEETBASE_WC_VERSION', '1.0.1' );
 define( 'FLEETBASE_WC_FILE', __FILE__ );
 define( 'FLEETBASE_WC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'FLEETBASE_WC_URL', plugin_dir_url( __FILE__ ) );

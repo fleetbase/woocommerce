@@ -2,7 +2,15 @@
 
 All notable changes to Fleetbase for WooCommerce are listed here. The format follows Keep a Changelog, and the project uses semantic versioning.
 
-## [1.0.0] — 2026-11-03
+## [1.0.1] — 2026-11-19
+
+### Changed
+- The plugin is now named "Fleetbase – Local Delivery, Drivers & Tracking for WooCommerce", so it appears in WordPress.org searches for local delivery, delivery drivers and delivery tracking. The slug, text domain and settings are unchanged.
+- The WordPress.org listing has a new short description, tags and description, plus FAQs on distance-based delivery fees, delivery dates and time slots, the driver app and delivery tracking.
+
+No code changes.
+
+## [1.0.0] — 2026-11-17
 
 ### Added
 - "Connect with Fleetbase": sign in and approve in Fleetbase instead of pasting an API key. Each store registers itself as an OAuth app (PKCE, no secret) and Fleetbase creates an API key for it; removing the store under Connected apps in Fleetbase revokes it. Needs Fleetbase 1.6.74 or newer.

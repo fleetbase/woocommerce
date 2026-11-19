@@ -1,17 +1,12 @@
-> v1.0.0 ~ "First release: live delivery quotes, scheduling, order and status sync, fleet pages"
+> v1.0.1 ~ "New plugin name and a clearer WordPress.org listing"
 
 ---
 ## Highlights
 
-- **Fleetbase Cloud or your own server.** Connect to Fleetbase Cloud or a self-hosted Fleetbase server, at no cost for the plugin either way.
-- **Connect with Fleetbase.** Sign in and approve the store in Fleetbase instead of pasting an API key. Status updates are registered automatically too, with signed webhooks and a manual fallback. Pasting a key still works.
-- **Live delivery quotes at checkout.** The "Fleetbase Delivery" shipping method prices every order from your Fleetbase service rates, in the block and classic checkout, with caching and an optional flat fallback during outages.
-- **Delivery scheduling.** Customers choose as soon as possible, or a day and time window within the hours, lead time and horizon you configure.
-- **Order sync.** Paid orders become Fleetbase orders in the background with retries, cash-on-delivery support and a per-order sync log. Nothing is ever duplicated.
-- **Status back in WooCommerce.** Webhook receiver with a polling fallback, an "Out for delivery" status and email, proof-of-delivery links, WooCommerce Fulfillments support and customer tracking on order pages, in emails, and through a shortcode and block.
-- **Fleet pages in WordPress admin.** Deliveries, Drivers, Vehicles and Service rates, plus a dispatcher role, all through server-side proxies so the API key never reaches the browser.
+- **New name.** The plugin is now "Fleetbase – Local Delivery, Drivers & Tracking for WooCommerce", so stores searching the plugin directory for local delivery, delivery drivers or delivery tracking can find it. The slug, text domain and settings are unchanged, so updating needs nothing from you.
+- **Clearer listing.** A new short description, tags and description, plus FAQs on distance-based delivery fees, delivery dates and time slots, the driver app and delivery tracking.
 
-Requires PHP 8.1, WordPress 6.8 and WooCommerce 9.5 or newer. Compatible with HPOS and the block checkout.
+No code changes. Requires PHP 8.1, WordPress 6.8 and WooCommerce 9.5 or newer.
 
 ---
 ## Need help?
